@@ -3,10 +3,30 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import Navbar from './navbar/Navbar.js';
+import { createTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@emotion/react';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#112434",
+    },
+    secondary: {
+      main: "#FFFFFF",
+    },
+    typography: {
+      fontFamily: 'Raleway'
+    },
+  },
+});
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme={theme}>
+      <Navbar />
+      <App />
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
