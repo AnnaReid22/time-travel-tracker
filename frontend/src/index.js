@@ -6,11 +6,32 @@ import Settings from './settings/Settings.js';
 import Users from './users/User.js';
 import AddTask from './tasks/addTask.js';
 import GroupButton from './groups/GroupButton.js';
+import App from './App.js';
 import reportWebVitals from './reportWebVitals';
+import Navbar from './navbar/Navbar.js';
+import { createTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@emotion/react';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#112434",
+    },
+    secondary: {
+      main: "#FFFFFF",
+    },
+    typography: {
+      fontFamily: 'Raleway'
+    },
+  },
+});
 
 ReactDOM.render(
   <React.StrictMode>
-    <GroupButton />
+    <ThemeProvider theme={theme}>
+      <Navbar />
+      <App />
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
