@@ -1,12 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import Todos from './todos/Todos.js';
+import Settings from './settings/Settings.js';
+import Users from './users/User.js';
+import AddTask from './tasks/addTask.js';
+import GroupButton from './groups/GroupButton.js';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <GroupButton />
   </React.StrictMode>,
   document.getElementById('root')
 );
