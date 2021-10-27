@@ -1,11 +1,11 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App.js';
-import reportWebVitals from './reportWebVitals';
-import Navbar from './navbar/Navbar.js';
-import { createTheme } from '@material-ui/core/styles';
-import { ThemeProvider } from '@emotion/react';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App.js";
+import reportWebVitals from "./reportWebVitals";
+import Navbar from "./navbar/Navbar.js";
+import { createTheme } from "@material-ui/core/styles";
+import { ThemeProvider } from "@emotion/react";
 
 const theme = createTheme({
   palette: {
@@ -16,7 +16,7 @@ const theme = createTheme({
       main: "#FFFFFF",
     },
     typography: {
-      fontFamily: 'Raleway'
+      fontFamily: "Raleway",
     },
   },
 });
@@ -24,11 +24,11 @@ const theme = createTheme({
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-        <Navbar />
-        <App />
+      <Navbar />
+      <App />
     </ThemeProvider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function
