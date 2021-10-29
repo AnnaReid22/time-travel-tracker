@@ -29,11 +29,11 @@ export default function FormPropsTextFields(props) {
     }
     function signUp(event) {
         //validatefunc
-        const userValid = validateSignUp(user)
+        /* const userValid = validateSignUp(user)
         setErrors({
             firstName: userValid.errors.firstName
         });
-        if (userValid.success)
+        if (userValid.success) */
             makePostCall(user)
     };
     function validateSignUp(user) {
@@ -117,6 +117,7 @@ export default function FormPropsTextFields(props) {
             label="Confirm Password"
             type="password"
             style={{ height: "30px", width: "300px", top: 100, left: 450 }}
+            value={user.cPass}
             onChange={handleChange}
         />
         <Button
