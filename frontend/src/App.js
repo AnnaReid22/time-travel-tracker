@@ -1,24 +1,26 @@
-import logo from './images/tttlogo.PNG';
-import './App.css';
+import "./App.css";
+import Todos from "./todos/Todos.js";
+import Settings from "./settings/Settings.js";
+import Users from "./users/User.js";
+import Calendar from "./calendar/Calendar.js";
+import { BrowserRouter, Route } from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Route path="/todos">
+        <Todos />
+      </Route>
+      <Route path="/settings">
+        <Settings />
+      </Route>
+      <Route path="/login">
+        <Users />
+      </Route>
+      <Route path="/calendar">
+        <Calendar />
+      </Route>
+    </BrowserRouter>
   );
 }
 
