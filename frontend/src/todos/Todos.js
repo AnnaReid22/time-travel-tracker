@@ -102,7 +102,7 @@ function EnhancedTableHead(props) {
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{
-              "aria-label": "select all desserts",
+              "aria-label": "select all tasks",
             }}
           />
         </TableCell>
@@ -185,7 +185,7 @@ const EnhancedTableToolbar = (props) => {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
+        <Tooltip title="Filter">
           <IconButton>
             <FilterListIcon />
           </IconButton>
@@ -201,7 +201,7 @@ EnhancedTableToolbar.propTypes = {
 
 export default function EnhancedTable() {
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [orderBy, setOrderBy] = React.useState("date");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
@@ -262,21 +262,12 @@ export default function EnhancedTable() {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-<<<<<<< HEAD
-    <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 1, mt: 10 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
-          <Table
-            sx={{ minWidth: 750, }}
-=======
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 1, mt: 10 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
->>>>>>> 81f053a0ce3f6ed6dbe9e207103b5395ce9736cf
             aria-labelledby="tableTitle"
             size={dense ? "small" : "medium"}
           >
