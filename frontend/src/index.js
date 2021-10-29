@@ -5,8 +5,11 @@ import Todos from './todos/Todos.js';
 import Settings from './settings/Settings.js';
 import Users from './users/User.js';
 import AddTask from './tasks/addTask.js';
+import Confirm from './tasks/confirmationPage';
+import Finish from './tasks/finishTaskPage';
 import GroupButton from './groups/GroupButton.js';
 import App from './App.js';
+
 import reportWebVitals from './reportWebVitals';
 import Navbar from './navbar/Navbar.js';
 import { createTheme } from '@material-ui/core/styles';
@@ -30,7 +33,7 @@ ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <Navbar />
-      <App />
+      <Finish />
     </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')

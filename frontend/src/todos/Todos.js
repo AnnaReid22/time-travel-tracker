@@ -31,7 +31,7 @@ function createData(taskName, dueDate) {
 }
 
 const rows = [
-  createData('Start 307 Project', "10/25/2021" ),
+  createData('Start 307 Project', "10/25/2021"),
   createData('Call Doctor', "10/27/2021")
 
 ];
@@ -79,7 +79,7 @@ const headCells = [
     disablePadding: false,
     label: 'Due Date',
   },
-  
+
 ];
 
 function EnhancedTableHead(props) {
@@ -257,11 +257,11 @@ export default function EnhancedTable() {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 1,mt: 10 }}>
+      <Paper sx={{ width: '100%', mb: 1, mt: 10 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
-            sx={{ minWidth: 750,}}
+            sx={{ minWidth: 750, }}
             aria-labelledby="tableTitle"
             size={dense ? 'small' : 'medium'}
           >
@@ -340,7 +340,7 @@ export default function EnhancedTable() {
       </Paper>
       <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
-        sx={{ mb: 1,ml: 2 }}
+        sx={{ mb: 1, ml: 2 }}
         label="Dense padding"
       />
     </Box>
