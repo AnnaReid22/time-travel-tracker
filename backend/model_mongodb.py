@@ -2,6 +2,9 @@
 #https://github.com/bklingen-calpoly/csc307-flask-backend.git
 import pymongo
 from bson import ObjectId
+import dns
+import os
+from dotenv import load_dotenv
 
 class Model(dict):
     """
@@ -39,11 +42,10 @@ class User(Model):
     # with <atlas-user>, <password> and <myFirstDatabase> updated accordingly
     # make sure .env is in .gitignore so that your password isn't relased into the wild
 
-    # load_dotenv()  # take environment variables from .env.
-    # MONGODB_URI = os.environ['MONGODB_URI']
-    # db_client = pymongo.MongoClient(MONGODB_URI)
-
-    db_client = pymongo.MongoClient("mongodb+srv://tttFEAccount:tttcsc307@tttusers.qqxey.mongodb.net/ttt?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE")  #change if your db is in another host and port
+    load_dotenv()  # take environment variables from .env.
+    MONGODB_URI = os.environ['MONGODB_URI']
+    db_client = pymongo.MongoClient(MONGODB_URI)
+    # db_client = pymongo.MongoClient("mongodb+srv://tttFEAccount:tttcsc307@tttusers.qqxey.mongodb.net/ttt?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE")  #change if your db is in another host and port
     collection = db_client["ttt"]["tttUsers"]  #db name is 'users' and collection name is 'users_list'
 
     def find_all(self):
