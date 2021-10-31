@@ -29,4 +29,10 @@ def register_user():
     else:
         newUser.save()
         return jsonify(newUser), 201
-    
+@app.route('/login', methods=['POST'])
+def login():  
+    userToAdd = request.get_json()
+    current_user = User(userToAdd)
+    if (current_user.user_exists()):
+        return jsonify(current_user), 200
+    return jsonify({"error": "User not found"}), 401

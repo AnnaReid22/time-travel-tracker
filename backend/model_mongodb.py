@@ -56,3 +56,5 @@ class User(Model):
 
     def email_exists(self):
         return (self.collection.find({"email": self.email}).limit(1).count() == 1)
+    def user_exists(self):
+        return (self.collection.find({"email": self.email, "password": self.password}).limit(1).count() == 1)
