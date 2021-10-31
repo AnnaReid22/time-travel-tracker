@@ -35,4 +35,4 @@ def login():
     current_user = User(userToAdd)
     if (current_user.user_exists()):
         return jsonify(current_user), 200
-    return jsonify({"error": "User not found"}), 404
+    return jsonify({"error": "User not found"}), 401

@@ -4,8 +4,10 @@ import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import LoginIcon from "@mui/icons-material/Login";
+import { useHistory } from 'react-router-dom';
 
 export default function FormPropsTextFields() {
+  let history = useHistory();
   const [user, getUser] = useState({
     email: "",
     password: "",
@@ -19,19 +21,31 @@ const [errors, setErrors] = useState({
         [event.target.name]: event.target.value
     });
 }
+
 function login(event) {
-  findUser(user)
+  findUser(user).then(function(result) {
+  if(result === 200){
+    console.log(result)
+    history.push('/todos')
+  }
+  else{
+    console.log("not logged in")
+  }
+});
+  
 };
+
 async function findUser(user){
   try {
      const response = await axios.post('http://127.0.0.1:5000/login', user);
      if (response.status === 200) {
-       console.log("logged in")
+       return 200
      }
-     return response.data  }
+     return false;  
+    }
   catch (error) {
      console.log(error.message);
-     return false;
+     return 401;
   }
 }
   return (
