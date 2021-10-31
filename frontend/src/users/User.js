@@ -5,6 +5,7 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import LoginIcon from "@mui/icons-material/Login";
 import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function FormPropsTextFields() {
   let history = useHistory();
@@ -29,6 +30,7 @@ function login(event) {
     history.push('/todos')
   }
   else{
+    alert("Incorrect Email/Password Combination")
     console.log("not logged in")
   }
 });
@@ -82,6 +84,15 @@ async function findUser(user){
         onClick={login}
       >
         Log In
+      </Button>
+      <Button 
+        component={Link} 
+        to="/register" 
+        style={{ height: "30px", width: "300px", top: 75, left: 450 }}
+        variant="contained" 
+        color="primary"
+        >
+        Register
       </Button>
     </Stack>
   );
