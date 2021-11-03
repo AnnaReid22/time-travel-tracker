@@ -4,11 +4,35 @@ from flask import request
 from flask import jsonify
 import json
 from flask_cors import CORS
+from model_mongodb import User
 from model_mongodb import Todo
 
 app = Flask(__name__)
 CORS(app)
 
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
+
+#login API routes
+@app.route('/users', methods=['POST'])
+def register_user():
+    userToAdd = request.get_json()
+    newUser = User(userToAdd)
+    if (newUser.email_exists()):
+        return jsonify({"error": "User already exists"}), 404
+    else:
+        newUser.save()
+        return jsonify(newUser), 201
+@app.route('/login', methods=['POST'])
+def login():  
+    userToAdd = request.get_json()
+    current_user = User(userToAdd)
+    if (current_user.user_exists()):
+        return jsonify(current_user), 200
+    return jsonify({"error": "User not found"}), 401
+
+#Todos API routes
 @app.route('/todos', methods=['POST', 'GET'])
 def add_todo():
     if request.method == 'GET':
@@ -41,3 +65,4 @@ def get_todo(id):
             return resp
         else:
            return jsonify({"error": "Todo not found"}), 404
+
