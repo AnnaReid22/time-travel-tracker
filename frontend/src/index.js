@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App.js";
 import reportWebVitals from "./reportWebVitals";
 import Navbar from "./navbar/Navbar.js";
+import Finish from "./tasks/confirmationPage.js";
 import { createTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@emotion/react";
 
@@ -25,7 +26,7 @@ ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <Navbar />
-      <App />
+      <App/>
     </ThemeProvider>
   </React.StrictMode>,
   document.getElementById("root")
