@@ -45,8 +45,7 @@ class User(Model):
     load_dotenv()  # take environment variables from .env.
     MONGODB_URI = os.environ['MONGODB_URI']
     db_client = pymongo.MongoClient(MONGODB_URI)
-    # db_client = pymongo.MongoClient("mongodb+srv://tttFEAccount:tttcsc307@tttusers.qqxey.mongodb.net/ttt?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE")  #change if your db is in another host and port
-    collection = db_client["ttt"]["tttUsers"]  #db name is 'users' and collection name is 'users_list'
+    collection = db_client["ttt"]["tttUsers"]
 
     def find_all(self):
         users = list(self.collection.find())
@@ -58,3 +57,25 @@ class User(Model):
         return (self.collection.find({"email": self.email}).limit(1).count() == 1)
     def user_exists(self):
         return (self.collection.find({"email": self.email, "password": self.password}).limit(1).count() == 1)
+
+
+class Todo(Model):
+    load_dotenv()
+    MONGODB_URI = os.environ['MONGODB_URI']
+    db_client = pymongo.MongoClient(MONGODB_URI)
+    collection = db_client["ttt"]["tttTodos"]
+
+    def find_all(self):
+        todos = list(self.collection.find({}))
+        for todo in todos:
+            todo["_id"] = str(todo["_id"])
+        return str(todos)
+
+    def update_one(self, id, replacement):
+        return self.collection.replace_one(
+            { "_id": ObjectId(id) }, 
+            replacement, 
+            upsert=False)
+
+
+
