@@ -38,10 +38,6 @@ class Model(dict):
             return resp
 
 class User(Model):
-    # to use a .env file, create .env and include a statmement MONGODB_URI='mongodb+srv://<atlas-user>:<password>@cluster0.6f9re.mongodb.net/<myFirstDatabase>?retryWrites=true&w=majority'
-    # with <atlas-user>, <password> and <myFirstDatabase> updated accordingly
-    # make sure .env is in .gitignore so that your password isn't relased into the wild
-
     load_dotenv()  # take environment variables from .env.
     MONGODB_URI = os.environ['MONGODB_URI']
     db_client = pymongo.MongoClient(MONGODB_URI)
