@@ -36,7 +36,7 @@ def login():
 @app.route('/todos', methods=['POST', 'GET'])
 def add_todo():
     if request.method == 'GET':
-        return Todo().find_all(), 201
+        return jsonify(Todo().find_all()), 201
     if request.method == 'POST':
         todoToAdd = request.get_json()
         newTodo = Todo(todoToAdd)
