@@ -19,16 +19,11 @@ jobs:
     - name: Set up Python 3.10
       uses: actions/setup-python@v2
       with:
-        python-version: 3.10
+        python-version: "3.10"
     - name: Set up environment
       run: |
-          cd backend/
-          python3 -m venv venv
-          venv\Scripts\activate
-          $env:FLASK_APP = "server.py"
-          $env:FLASK_ENV = "development"
           pip install -r requirements.txt
-          flask run
+      working-directory: ./backend
     - name: Run tests
       run: |
         pytest
