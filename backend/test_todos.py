@@ -1,6 +1,4 @@
 import pytest
-import sys
-sys.path.append('../backend')
 import model_mongodb 
 
 def test_find_all_todos():  
