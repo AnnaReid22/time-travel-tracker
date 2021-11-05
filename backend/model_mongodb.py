@@ -65,12 +65,12 @@ class Todo(Model):
         todos = list(self.collection.find({}))
         for todo in todos:
             todo["_id"] = str(todo["_id"])
-        return str(todos)
+        return todos
 
     def update_one(self, id, replacement):
-        return self.collection.replace_one(
+        return self.collection.update_one(
             { "_id": ObjectId(id) }, 
-            replacement, 
+            {"$set": replacement}, 
             upsert=False)
 
 
