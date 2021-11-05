@@ -23,9 +23,11 @@ jobs:
     - name: Set up environment
       run: |
           pip install -r requirements.txt
+      env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
       working-directory: ./backend
     - name: Run tests
       run: |
         pytest
       env:
-        MONGODB_URI: ${{secrets.MONGODB_URI}}
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
