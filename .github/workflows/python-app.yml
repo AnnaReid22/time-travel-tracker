@@ -31,7 +31,7 @@ jobs:
         pytest
       env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
-    working-directory: ./frontend
+      working-directory: ./frontend
     - name: Run frontend tests
       run: |
         npm start
