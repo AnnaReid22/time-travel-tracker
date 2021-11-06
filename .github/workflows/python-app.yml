@@ -26,8 +26,15 @@ jobs:
       env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
       working-directory: ./backend
-    - name: Run tests
+    - name: Run backend tests
       run: |
         pytest
+      env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+    working-directory: ./frontend
+    - name: Run frontend tests
+      run: |
+        npm start
+        npm test
       env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
