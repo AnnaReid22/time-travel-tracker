@@ -1,7 +1,4 @@
 import pytest
-import sys
-import os
-sys.path.append('../backend')
 import model_mongodb
 
 def test_email_exists_pass():
