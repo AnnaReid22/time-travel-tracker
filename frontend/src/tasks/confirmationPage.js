@@ -3,12 +3,7 @@ import Button from '@mui/material/Button';
 import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
-import { styled } from '@mui/material/styles';
 import { Typography } from '@mui/material';
-import Confetti from 'react-confetti'
-
-
 
 export default function IconLabelButtons() {
   //const { width, height } = useWindowSize()

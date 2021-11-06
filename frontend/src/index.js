@@ -4,7 +4,6 @@ import "./index.css";
 import App from "./App.js";
 import reportWebVitals from "./reportWebVitals";
 import Navbar from "./navbar/Navbar.js";
-import Finish from "./tasks/confirmationPage.js";
 import { createTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@emotion/react";
 
