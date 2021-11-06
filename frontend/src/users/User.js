@@ -13,9 +13,6 @@ export default function FormPropsTextFields() {
     email: "",
     password: "",
 });
-const [errors, setErrors] = useState({   
-  email: "",
-})
   function handleChange(event) {
     getUser({
         ...user,
