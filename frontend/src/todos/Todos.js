@@ -28,25 +28,31 @@ import DialogTitle from '@mui/material/DialogTitle';
 import CloseIcon from '@mui/icons-material/Close';
 import Filter from "./filter.js";
 import CheckIcon from '@mui/icons-material/Check';
+import { Redirect } from 'react-router';
+
+//TO REDIRECT TO CONFIRMATION PAGE
+ //  <Redirect to = "/confirmation"/>
 
 
 
-function createData(task, duedate) {
+function createData(task, duedate, importance) {
   return {
     task,
     duedate,
+    importance,
   };
 }
 
 
+
 const rows = [
-  createData("Start 307 Project", "10/25/2021"),
-  createData("Call Doctor", "10/27/2021"),
-  createData("Get Groceries", "10/30/2021"),
-  createData("Plan Friendsgiving", "11/15/2021"),
-  createData("Regristation", "11/5/2021"),
-  createData("Go to office hours", "11/8/2021"),
-  createData("DATE NITE OOO WEEEE", "11/13/2021"),
+  createData("Start 307 Project", "10/25/2021", "!!"),
+  createData("Call Doctor", "10/27/2021", "!!!"),
+  createData("Get Groceries", "10/30/2021", "!!"),
+  createData("Plan Friendsgiving", "11/15/2021", "!"),
+  createData("Regristation", "11/5/2021", "!!!"),
+  createData("Go to office hours", "11/8/2021", "!"),
+  createData("DATE NITE OOO WEEEE", "11/13/2021", "!!!"),
 
 
 ];
@@ -132,6 +138,12 @@ const headCells = [
     disablePadding: false,
     label: 'Due Date',
   },
+  {
+    id: 'importance',
+    numeric: true,
+    disablePadding: false,
+    label: 'Importance',
+  },
 ];
 
 function EnhancedTableHead(props) {
@@ -145,15 +157,6 @@ function EnhancedTableHead(props) {
     <TableHead>
       <TableRow>
         <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              'aria-label': 'select all desserts',
-            }}
-          />
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
@@ -234,13 +237,13 @@ const EnhancedTableToolbar = (props) => {
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
+          <IconButton >
+          onClick={<Redirect to = "/confirmation"/>}
             <CheckIcon />
           </IconButton>
-        </Tooltip>
       ) : (
         <div>
+          
           
         <Button variant="outlined" onClick={handleClickOpen}>
         <FilterListIcon />
@@ -272,7 +275,8 @@ EnhancedTableToolbar.propTypes = {
 
 export default function EnhancedTable() {
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('duedate');
+  const [orderBy, setOrderBy] = React.useState('importance');
+  //const [orderBy, setOrderBy] = React.useState('importance');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
@@ -396,6 +400,7 @@ export default function EnhancedTable() {
                         {row.task}
                       </TableCell>
                       <TableCell align="right">{row.duedate}</TableCell>
+                      <TableCell align="right">{row.importance}</TableCell>
                     </TableRow>
                   );
                 })}

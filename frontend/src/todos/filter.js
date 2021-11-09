@@ -25,7 +25,7 @@ const MenuProps = {
   },
 };
 
-const applied = [];
+
 const filters = [
 'School',
 'Work', 
@@ -61,7 +61,7 @@ export default function MultipleSelectChip() {
 
   return (
     <div>
-      <FormControl sx={{ m: 1, width: 300 }}>
+      <FormControl sx={{ m: 3, width: 300 }}>
         <InputLabel id="demo-multiple-chip-label">Filters</InputLabel>
         <Select
           labelId="demo-multiple-chip-label"
@@ -71,9 +71,9 @@ export default function MultipleSelectChip() {
           onChange={handleChange}
           input={<OutlinedInput id="select-multiple-chip" label="Filters" />}
           renderValue={(selected) => (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
               {selected.map((value) => (
-                <Chip key={value} label={value} />
+               <Chip key={value} label={value} />
               ))}
             </Box>
           )}
@@ -92,14 +92,14 @@ export default function MultipleSelectChip() {
         </Select>
         <Button
           variant="outlined"
-          style={{ width: "300px", }}
+          style={{ width: "300px", top:5 }}
           startIcon={< ClearIcon/>}
         >
           Clear 
         </Button>
         <Button
           variant="outlined"
-          style={{ width: "300px", top: 5}}
+          style={{ width: "300px", top: 10}}
           startIcon={<AddIcon />}
         >
           Apply 
