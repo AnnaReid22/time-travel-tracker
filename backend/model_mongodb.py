@@ -4,6 +4,7 @@ import pymongo
 from bson import ObjectId
 import dns
 import os
+import hashlib
 from dotenv import load_dotenv
 
 class Model(dict):
@@ -42,6 +43,11 @@ class User(Model):
     MONGODB_URI = os.environ['MONGODB_URI']
     db_client = pymongo.MongoClient(MONGODB_URI)
     collection = db_client["ttt"]["tttUsers"]
+
+    def encryptPassword(self):
+        hash_object = hashlib.sha1(self.password.encode())
+        self.password = hash_object.hexdigest()
+        self.cPass = self.password
 
     def find_all(self):
         users = list(self.collection.find())

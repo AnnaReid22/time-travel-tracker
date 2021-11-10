@@ -19,6 +19,7 @@ def hello_world():
 def register_user():
     userToAdd = request.get_json()
     newUser = User(userToAdd)
+    newUser.encryptPassword()
     if (newUser.email_exists()):
         return jsonify({"error": "User already exists"}), 404
     else:
@@ -28,6 +29,7 @@ def register_user():
 def login():  
     userToAdd = request.get_json()
     current_user = User(userToAdd)
+    current_user.encryptPassword()
     if (current_user.user_exists()):
         return jsonify(current_user), 200
     return jsonify({"error": "User not found"}), 401
