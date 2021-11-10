@@ -2,7 +2,7 @@ import pytest
 import model_mongodb 
 
 def test_find_all_todos():  
-    expected = [{
+    expected = {
             "_id" : "6181918385eced7a97a48fda",
             "title" : "test",
             "start" : "2021-11-02T19:29:07.799Z",
@@ -11,8 +11,8 @@ def test_find_all_todos():
             "importance" : 4,
             "notify" : "2021-11-02T19:29:07.799Z",
             "category" : "school"
-        },]
-    assert model_mongodb.Todo().find_all() == expected
+        }
+    assert expected in model_mongodb.Todo().find_all()
 
 
 def test_update_one():  
