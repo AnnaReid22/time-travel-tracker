@@ -2,7 +2,6 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import { Typography } from '@mui/material';
 import Confetti from 'react-confetti'
-import { Redirect } from 'react-router';
 
 
 export default function IconLabelButtons() {
