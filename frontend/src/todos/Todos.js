@@ -233,7 +233,23 @@ const EnhancedTableToolbar = (props) => {
           component="div"
         >
           To Do List
+        <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 65 }}>
+       All Tasks
+      </Button>
+
+      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left:70 }}>
+       Today
+      </Button>
+
+      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 75 }}>
+       Week
+      </Button>
+
+      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 80 }}>
+       Completed 
+      </Button>
         </Typography>
+        
       )}
 
       {numSelected > 0 ? (
@@ -243,12 +259,13 @@ const EnhancedTableToolbar = (props) => {
           </IconButton>
       ) : (
         <div>
+
           
-          
-        <Button variant="outlined" onClick={handleClickOpen}>
+        <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10}} onClick={handleClickOpen}>
         <FilterListIcon />
           Filter
         </Button>
+
         <BootstrapDialog
           onClose={handleClose}
           aria-labelledby="customized-dialog-title"

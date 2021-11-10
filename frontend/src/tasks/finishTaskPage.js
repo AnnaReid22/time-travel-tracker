@@ -2,7 +2,7 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import { Typography } from '@mui/material';
 import Confetti from 'react-confetti'
-
+import { Redirect } from 'react-router';
 
 
 export default function IconLabelButtons() {
@@ -21,7 +21,8 @@ export default function IconLabelButtons() {
                 {"The actual due date was: "}
             </Typography>
             <Button variant="contained" style={{ height: '45px', width: '310px', top: 10, left: -50 }}>
-                Go to Calender
+                Go to Calendar
+                
             </Button>
             <Button variant="contained" style={{ height: '45px', width: '310px', top: 80, left: -360}}>
                 Go to Todo
