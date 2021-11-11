@@ -26,11 +26,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 import CloseIcon from '@mui/icons-material/Close';
 import Filter from "./filter.js";
 import CheckIcon from '@mui/icons-material/Check';
-import { Redirect } from 'react-router';
+import { useHistory } from "react-router-dom";
 
-//TO REDIRECT TO CONFIRMATION PAGE
+//TO REDIRECT TO CONFIRMATION PAGE OR OTHER PAGES 
+// it works sometimes... its a little odd 
  //  <Redirect to = "/confirmation"/>
 
+
+  
 
 
 function createData(task, duedate, importance) {
@@ -151,7 +154,10 @@ function EnhancedTableHead(props) {
     onRequestSort(event, property);
   };
 
+
+
   return (
+    
     <TableHead>
       <TableRow>
         <TableCell padding="checkbox">
@@ -201,6 +207,17 @@ const EnhancedTableToolbar = (props) => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const history = useHistory();
+
+  const handleRoute = () =>{ 
+    history.push("/confirmation");
+  }
+
+  const handleRouteCom = () =>{ 
+    history.push("/completed");
+  }
+
   const { numSelected } = props;
 
   return (
@@ -243,7 +260,7 @@ const EnhancedTableToolbar = (props) => {
        Week
       </Button>
 
-      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 80 }}>
+      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 80 }} onClick = {handleRouteCom}>
        Completed 
       </Button>
         </Typography>
@@ -252,8 +269,8 @@ const EnhancedTableToolbar = (props) => {
 
       {numSelected > 0 ? (
           <IconButton >
-          onClick={<Redirect to = "/confirmation"/>}
-            <CheckIcon />
+            <CheckIcon onClick={handleRoute}/>
+            {/* onClick={<Redirect to = "/confirmation"/>} */}
           </IconButton>
       ) : (
         <div>

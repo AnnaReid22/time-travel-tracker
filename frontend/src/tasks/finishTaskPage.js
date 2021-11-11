@@ -1,11 +1,22 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
-import { Typography } from '@mui/material';
-import Confetti from 'react-confetti'
+import { Typography } from '@mui/material'
+import Confetti from 'react-confetti';
+import { useHistory } from "react-router-dom";
 
 
 export default function IconLabelButtons() {
-    //const { width, height } = useWindowSize()
+   
+  const history = useHistory();
+
+  const handleRoute = () =>{ 
+    history.push("/todos");
+  }
+  
+  const handleRouteCal = () =>{ 
+    history.push("/calendar");
+  }
+
     return (
         <Typography variant="h4" mt={20} ml={60}>
             {"You did it!"}
@@ -19,11 +30,11 @@ export default function IconLabelButtons() {
             <Typography variant="h5" mt={5} ml={-13}>
                 {"The actual due date was: "}
             </Typography>
-            <Button variant="contained" style={{ height: '45px', width: '310px', top: 10, left: -50 }}>
+            <Button variant="contained" style={{ height: '45px', width: '310px', top: 10, left: -50 }} onClick={handleRouteCal}>
                 Go to Calendar
                 
             </Button>
-            <Button variant="contained" style={{ height: '45px', width: '310px', top: 80, left: -360}}>
+            <Button variant="contained" style={{ height: '45px', width: '310px', top: 80, left: -360}}onClick={handleRoute} >
                 Go to Todo
             </Button>
         </Typography>
