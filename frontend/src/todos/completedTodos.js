@@ -61,14 +61,6 @@ function descendingComparator(a, b, orderBy) {
     return 0;
 }
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-    '& .MuiDialogContent-root': {
-        padding: theme.spacing(2),
-    },
-    '& .MuiDialogActions-root': {
-        padding: theme.spacing(1),
-    },
-}));
 
 const BootstrapDialogTitle = (props) => {
     const { children, onClose, ...other } = props;
@@ -192,14 +184,9 @@ EnhancedTableHead.propTypes = {
 
 const EnhancedTableToolbar = (props) => {
 
-    const [open, setOpen] = React.useState(false);
+    const [setOpen] = React.useState(false);
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-    const handleClose = () => {
-        setOpen(false);
-    };
+
 
     const history = useHistory();
 
