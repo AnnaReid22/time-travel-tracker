@@ -19,8 +19,6 @@ import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { visuallyHidden } from '@mui/utils';
-import { styled } from '@mui/material/styles';
-import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import CloseIcon from '@mui/icons-material/Close';
 import { useHistory } from "react-router-dom";
@@ -62,6 +60,7 @@ function descendingComparator(a, b, orderBy) {
 }
 
 
+
 const BootstrapDialogTitle = (props) => {
     const { children, onClose, ...other } = props;
 
@@ -86,10 +85,6 @@ const BootstrapDialogTitle = (props) => {
     );
 };
 
-BootstrapDialogTitle.propTypes = {
-    children: PropTypes.node,
-    onClose: PropTypes.func.isRequired,
-};
 
 function getComparator(order, orderBy) {
     return order === 'desc'
@@ -184,8 +179,7 @@ EnhancedTableHead.propTypes = {
 
 const EnhancedTableToolbar = (props) => {
 
-    const [setOpen] = React.useState(false);
-
+  
 
 
     const history = useHistory();
