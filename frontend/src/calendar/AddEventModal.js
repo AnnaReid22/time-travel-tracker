@@ -26,15 +26,16 @@ export default function AddEventModal ({clicked, events, setEvents, setModal}) {
     };
 
     const handleChangeEndDate = (date) => {
+        console.log(date)
         setEndDate(date);
     };
 
     const handleChangeCategory = (cat) => {
-        setCategory(category);
+        setCategory(cat.target.value);
       };
 
     const handleChangeImportance = (im) => {
-        setImportance(im);
+        setImportance(im.target.value);
       };
 
     async function addNewEvent(){

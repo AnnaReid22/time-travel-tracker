@@ -30,11 +30,11 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
     };
 
     const handleChangeCategory = (cat) => {
-        setCategory(category);
+        setCategory(cat.target.value);
       };
 
     const handleChangeImportance = (im) => {
-        setImportance(im);
+        setImportance(im.target.value);
       };
 
     async function deleteEvent(){
