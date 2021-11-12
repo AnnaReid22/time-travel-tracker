@@ -6,6 +6,7 @@ import Register from "./users/Register.js";
 import Calendar from "./calendar/Calendar.js";
 import Confirm from "./tasks/confirmationPage.js";
 import Finish from "./tasks/finishTaskPage";
+import Complete from "./todos/completedTodos.js";
 import { BrowserRouter, Route } from "react-router-dom";
 
 function App() {
@@ -31,6 +32,9 @@ function App() {
       </Route>
       <Route path="/finish">
         <Finish />
+      </Route>
+      <Route path="/completed">
+        <Complete />
       </Route>
     </BrowserRouter>
   );
