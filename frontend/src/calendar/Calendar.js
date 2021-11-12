@@ -4,14 +4,17 @@ import moment from "moment";
 import axios from "axios";
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import Dialog from '@mui/material/Dialog';
-import MyDialog from "./AddEventModal";
+import AddEventModal from "./AddEventModal";
+import EditEventModal from "./EditEventModal";
 
 const localizer = momentLocalizer(moment);
 let allViews = Object.keys(Views).map(k => Views[k])
 
 export default function MyCalendar() {
   const [events, setEvents]= useState([]);
-  const [modal, setModal]= useState(false);
+  const [modalAdd, setModalAdd]= useState(false);
+  const [modalEdit, setModalEdit]= useState(false);
+  const [clickedEvent, setClickedEvent]= useState({});
 
   useEffect(() => { 
     async function getEvents(){
@@ -30,14 +33,24 @@ export default function MyCalendar() {
       }
      }
     getEvents();
-  }, [events, setEvents]);
+  }, []);
 
-  function handleSelectedSlot() {
-    setModal(true)
+  function handleSelectedSlot(event) {
+    setClickedEvent(event)
+    setModalAdd(true)
   }
 
-  function handleClose() {
-    setModal(false)
+  function handleCloseAdd() {
+    setModalAdd(false)
+  }
+
+  function handleSelectedEvent(event) {
+    setClickedEvent(event)
+    setModalEdit(true)
+  }
+
+  function handleCloseEdit() {
+    setModalEdit(false)
   }
 
   return (
@@ -50,10 +63,20 @@ export default function MyCalendar() {
         localizer={localizer}
         views={allViews}
         style={{ height: "100vh" }}
-        onSelectSlot={handleSelectedSlot}
+        onSelectSlot={(event) => handleSelectedSlot(event)}
+        onSelectEvent={(event) => handleSelectedEvent(event)}
       />
-      <Dialog open={modal} onClose={handleClose}>
-        <MyDialog events={events} setEvents={setEvents} setModal={setModal}></MyDialog>
+      <Dialog open={modalAdd} onClose={handleCloseAdd}>
+        <AddEventModal clicked={clickedEvent} 
+                  events={events} 
+                  setEvents={setEvents} 
+                  setModal={setModalAdd} />
+      </Dialog>
+      <Dialog open={modalEdit} onClose={handleCloseEdit}>
+        <EditEventModal clicked={clickedEvent} 
+                  events={events} 
+                  setEvents={setEvents} 
+                  setModal={setModalEdit} />
       </Dialog>
     </div>
   );

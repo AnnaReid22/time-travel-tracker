@@ -9,13 +9,13 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DateTimePicker from '@mui/lab/DateTimePicker';
 import axios from 'axios';
 
-export default function AddEventModal ({clicked, events, setEvents, setModal}) { 
+export default function EditEventModal ({clicked, events, setEvents, setModal}) { 
     const [startDate, setStartDate] = React.useState(clicked.start);
     const [endDate, setEndDate] = React.useState(clicked.end);
-    const [category, setCategory] = React.useState('Other');
-    const [important, setImportance] = React.useState('!');
-    const [title, setTitle] = React.useState('');
-    const [description, setDescription] = React.useState('');
+    const [category, setCategory] = React.useState(clicked.category);
+    const [important, setImportance] = React.useState(clicked.importance);
+    const [title, setTitle] = React.useState(clicked.title);
+    const [description, setDescription] = React.useState(clicked.description);
 
     function handleClose() {
         setModal(false)
@@ -37,7 +37,24 @@ export default function AddEventModal ({clicked, events, setEvents, setModal}) {
         setImportance(im);
       };
 
-    async function addNewEvent(){
+    async function deleteEvent(){
+        try {
+            const response = await axios.delete('http://localhost:5000/todos/' + clicked._id);
+            if(response.status === 204){
+                events = events.filter(e => e._id !== clicked._id)
+                setEvents([...events])
+            }
+            else {
+                console.log("Error, event not deleted from database.")
+            }
+        }
+        catch (error) {
+            console.log(error);
+            return false;
+        }
+    }
+
+    async function updateEvent(){
         const event = {
             title: title,
             start: startDate,
@@ -48,12 +65,14 @@ export default function AddEventModal ({clicked, events, setEvents, setModal}) {
             category: category
         }
         try {
-            const response = await axios.post('http://localhost:5000/todos', event);
-            if(response.status === 201){
-                setEvents([...events, response.data])
+            const response = await axios.put('http://localhost:5000/todos/' + clicked._id, event);
+            if(response.status === 204){
+                events = events.filter(e => e._id !== clicked._id)
+                event["_id"] = clicked._id
+                setEvents([...events, event])
             }
             else {
-                console.log("Error, event not added to database.")
+                console.log("Error, event not deleted from database.")
             }
         }
         catch (error) {
@@ -62,8 +81,13 @@ export default function AddEventModal ({clicked, events, setEvents, setModal}) {
         }
     }
 
-    const handleSubmit = () => {
-        addNewEvent()
+    const handleDelete = () => {
+        deleteEvent()
+        setModal(false)
+    }
+
+    const handleUpdate = () => {
+        updateEvent()
         setModal(false)
     }
 
@@ -166,8 +190,9 @@ export default function AddEventModal ({clicked, events, setEvents, setModal}) {
                 />
             </DialogContent>
             <DialogActions>
+                <Button onClick={handleDelete}>Delete</Button>
                 <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={handleSubmit}>Add</Button>
+                <Button onClick={handleUpdate}>Update</Button>
             </DialogActions>
         </div>
     );
