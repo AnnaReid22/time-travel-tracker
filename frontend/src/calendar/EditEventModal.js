@@ -57,11 +57,11 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
     async function updateEvent(){
         const event = {
             title: title,
-            start: startDate,
-            end: endDate,
+            start: new Date(startDate),
+            end: new Date(endDate),
             description: description,
             importance: important,
-            notify: endDate,
+            notify: new Date(endDate),
             category: category
         }
         try {

@@ -19,17 +19,22 @@ export default function MyCalendar() {
   useEffect(() => { 
     async function getEvents(){
       try {
-         const response = await axios.get('http://localhost:5000/todos');
-         if(response.status === 201){
-          setEvents(response.data)
-         }
-         else {
-           console.log("Error, todos not found.")
-         }
+        const response = await axios.get('http://localhost:5000/todos');
+        if(response.status === 201){
+        for(let i = 0; i < response.data.length; i++) {
+          let resp = response.data[i]
+          resp.start = new Date(resp.start)
+          resp.end = new Date(resp.end)
+        }
+        setEvents(response.data)
+        }
+        else {
+          console.log("Error, todos not found.")
+        }
       }
       catch (error) {
-         console.log(error);
-         return false;
+        console.log(error);
+        return false;
       }
      }
     getEvents();
@@ -49,6 +54,11 @@ export default function MyCalendar() {
     setModalEdit(true)
   }
 
+  function handleChangeView(event) {
+    console.log("this is a test")
+    console.log(event)
+  }
+
   function handleCloseEdit() {
     setModalEdit(false)
   }
@@ -62,6 +72,7 @@ export default function MyCalendar() {
         showMultiDayTimes
         localizer={localizer}
         views={allViews}
+        onView={(event) => handleChangeView(event)}
         style={{ height: "100vh" }}
         onSelectSlot={(event) => handleSelectedSlot(event)}
         onSelectEvent={(event) => handleSelectedEvent(event)}
