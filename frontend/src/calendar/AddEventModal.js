@@ -46,7 +46,8 @@ export default function AddEventModal ({clicked, events, setEvents, setModal}) {
             description: description,
             importance: important,
             notify: endDate,
-            category: category
+            category: category,
+            completed: false
         }
         try {
             const response = await axios.post('http://localhost:5000/todos', event);
