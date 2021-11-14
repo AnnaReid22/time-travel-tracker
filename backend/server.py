@@ -45,6 +45,10 @@ def add_todo():
         newTodo.save()
         return jsonify(newTodo), 201
 
+@app.route('/todos/completed', methods=['PUT', 'GET'])
+def completed_Todo():
+    if request.method == 'GET':
+        return jsonify(Todo().find_all()), 201
 @app.route('/todos/<id>', methods=['GET', 'DELETE', 'PUT'])
 def get_todo(id):
     if request.method == 'GET':

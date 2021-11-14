@@ -20,6 +20,9 @@ import Switch from '@mui/material/Switch';
 import { visuallyHidden } from '@mui/utils';
 import { useHistory } from "react-router-dom";
 import { RemoveFromCompleteModal } from "./completeModals";
+import axios from 'axios';
+import { useState, useEffect } from "react";
+
 //TO REDIRECT TO CONFIRMATION PAGE OR OTHER PAGES 
 // it works sometimes... its a little odd 
 //  <Redirect to = "/confirmation"/>
@@ -32,17 +35,6 @@ function createData(task, duedate, actual) {
         actual,
     };
 }
-
-
-const rows = [
-    createData("Start 307 Project", "10/25/2021", "10/17/2021"),
-    createData("Get Groceries", "10/30/2021", "10/30/2021"),
-    createData("Plan Friendsgiving", "11/15/2021", "11/14/2021"),
-    createData("Regristation", "11/5/2021", "11/5/2021"),
-    createData("Go to office hours", "11/8/2021", "11/8/2021"),
-
-
-];
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -107,7 +99,6 @@ function EnhancedTableHead(props) {
 
 
     return (
-
         <TableHead>
             <TableRow>
                 <TableCell padding="checkbox">
@@ -233,7 +224,7 @@ export default function EnhancedTable() {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelecteds = rows.map((n) => n.task);
+            const newSelecteds = events.map((n) => n.task);
             setSelected(newSelecteds);
             return;
         }
@@ -278,7 +269,27 @@ export default function EnhancedTable() {
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - events.length) : 0;
+    const [events, setEvent] = useState([]);
+    const getEventData = async () => {
+        try {
+            const data = await axios.get("http://localhost:5000/todos/completed");
+            console.log(data.data);
+            const rows = []
+            for(let i = 0; i < data.data.length; i++) {
+                let resp = data.data[i]
+                if(resp.completed == true){
+                    rows.push(createData(resp.title, resp.notify, resp.end))
+                }
+            }
+            setEvent(rows);
+        }catch (e) {
+            console.log(e);
+        }
+        };
+        React.useEffect(() => {
+            getEventData();
+        }, []);
 
     return (
         <Box sx={{ width: '100%' }}>
@@ -296,12 +307,12 @@ export default function EnhancedTable() {
                             orderBy={orderBy}
                             onSelectAllClick={handleSelectAllClick}
                             onRequestSort={handleRequestSort}
-                            rowCount={rows.length}
+                            rowCount={events.length}
                         />
                         <TableBody>
                             {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
-                            {stableSort(rows, getComparator(order, orderBy))
+                            {stableSort(events, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
                                     const isItemSelected = isSelected(row.task);
@@ -354,7 +365,7 @@ export default function EnhancedTable() {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={rows.length}
+                    count={events.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
