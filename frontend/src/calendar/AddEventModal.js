@@ -35,8 +35,8 @@ export default function AddEventModal ({clicked, events, setEvents, setModal}) {
         setEndDate(date);
     };
 
-    const handleChangeDoNotPush = (bool) => {
-        setDoNotPush(bool)
+    const handleChangeDoNotPush = () => {
+        setDoNotPush(!doNotPush);
     }
 
     const handleChangeCategory = (cat) => {
@@ -57,7 +57,7 @@ export default function AddEventModal ({clicked, events, setEvents, setModal}) {
             givenStart: startDate,
             givenEnd: endDate,
             category: category,
-            doNotPush: false
+            doNotPush: doNotPush
         }
         try {
             const response = await axios.post('http://localhost:5000/todos', event);
@@ -132,10 +132,10 @@ export default function AddEventModal ({clicked, events, setEvents, setModal}) {
                     onChange={handleChangeEndDate}
                     renderInput={(params) => <TextField {...params} />}
                 />
-                <FormGroup>
+                <FormGroup style={{marginBottom: "30px"}}>
                     <FormControlLabel control=
                         {<Checkbox  
-                             onChange={handleChangeDoNotPush}   
+                             onClick={handleChangeDoNotPush}   
                         />} label="Do NOT Push Up Date" />
                 </FormGroup>
                 <TextField
