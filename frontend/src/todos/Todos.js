@@ -27,7 +27,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import Filter from "./filter.js";
 import CheckIcon from '@mui/icons-material/Check';
 import { useHistory } from "react-router-dom";
-
+import Stack from '@mui/material/Stack';
+import Modal from '@mui/material/Modal';
+import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
 //TO REDIRECT TO CONFIRMATION PAGE OR OTHER PAGES 
 // it works sometimes... its a little odd 
  //  <Redirect to = "/confirmation"/>
@@ -45,7 +48,17 @@ function createData(task, duedate, importance) {
 }
 
 
-
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 const rows = [
   createData("Start 307 Project", "10/25/2021", "!!"),
   createData("Call Doctor", "10/27/2021", "!!!"),
@@ -210,8 +223,8 @@ const EnhancedTableToolbar = (props) => {
 
   const history = useHistory();
 
-  const handleRoute = () =>{ 
-    history.push("/confirmation");
+  const handleRouteFinish = () =>{ 
+    history.push("/finish");
   }
 
   const handleRouteCom = () =>{ 
@@ -268,10 +281,31 @@ const EnhancedTableToolbar = (props) => {
       )}
 
       {numSelected > 0 ? (
-          <IconButton >
-            <CheckIcon onClick={handleRoute}/>
-            {/* onClick={<Redirect to = "/confirmation"/>} */}
-          </IconButton>
+         <div>
+         <IconButton >
+             <CheckIcon onClick={handleClickOpen}/>     
+         </IconButton>
+         <Modal
+             open={open}
+             onClose={handleClose}
+             aria-labelledby="modal-modal-title"
+             aria-describedby="modal-modal-description"
+         >
+         <Box sx={style}>
+           <Typography id="modal-modal-title" variant="h5" component="h2">
+             Add this task back to your todo list?
+             <Stack direction="column" spacing={4}>
+                 <Button variant="contained" style={{ height: '45px', width: '310px', top: 10, left: 45 }} startIcon={<DoneAllIcon />}  onClick={handleRouteFinish}>
+                    Yes, add to my completed list
+                 </Button>
+                 <Button variant="contained" style={{ height: '45px', width: '310px', top: 10, left: 45 }} startIcon={<RemoveDoneIcon />} onClick={handleClose}>
+                    No, leave as not complete
+                 </Button>
+             </Stack>
+           </Typography>
+         </Box>
+       </Modal>
+     </div>
       ) : (
         <div>
 
