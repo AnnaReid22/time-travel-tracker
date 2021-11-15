@@ -73,11 +73,29 @@ class Todo(Model):
             todo["_id"] = str(todo["_id"])
         return todos
 
+    def find_completed(self):
+        todos = list(self.collection.find({"completed" : True}))
+        for todo in todos:
+            todo["_id"] = str(todo["_id"])
+        return todos
+
+    def find_todos(self):
+        todos = list(self.collection.find({"completed" : False}))
+        for todo in todos:
+            todo["_id"] = str(todo["_id"])
+        return todos
+        
+    def update_completed(self, id, bool):
+        return self.collection.update(
+            {"_id": ObjectId(id) },
+            { "$set":
+                {
+                    "completed": bool
+                }})
+
     def update_one(self, id, replacement):
         return self.collection.update_one(
             { "_id": ObjectId(id) }, 
             {"$set": replacement}, 
             upsert=False)
-
-
 

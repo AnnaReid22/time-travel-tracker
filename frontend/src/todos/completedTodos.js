@@ -21,18 +21,19 @@ import { visuallyHidden } from '@mui/utils';
 import { useHistory } from "react-router-dom";
 import { RemoveFromCompleteModal } from "./completeModals";
 import axios from 'axios';
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 //TO REDIRECT TO CONFIRMATION PAGE OR OTHER PAGES 
 // it works sometimes... its a little odd 
 //  <Redirect to = "/confirmation"/>
 
 
-function createData(task, duedate, actual) {
+function createData(task, duedate, actual, obId) {
     return {
         task,
         duedate,
         actual,
+        obId
     };
 }
 
@@ -87,6 +88,12 @@ const headCells = [
         disablePadding: false,
         label: 'Actual Due Date',
     },
+    {
+        id: 'id',
+        numeric: true,
+        disablePadding: false,
+    },
+
 ];
 
 function EnhancedTableHead(props) {
@@ -149,7 +156,7 @@ const EnhancedTableToolbar = (props) => {
     }
 
     const { numSelected } = props;
-
+    const { selectedItems } = props;
     return (
         <Toolbar
             sx={{
@@ -189,7 +196,7 @@ const EnhancedTableToolbar = (props) => {
             )}
 
             {numSelected > 0 ? (
-                <RemoveFromCompleteModal/>
+                <RemoveFromCompleteModal selectedItems = {selectedItems} />
             ) : (
                 <div>
 
@@ -205,6 +212,7 @@ const EnhancedTableToolbar = (props) => {
 
 EnhancedTableToolbar.propTypes = {
     numSelected: PropTypes.number.isRequired,
+    selectedItems: PropTypes.arrayOf(Object),
 };
 
 export default function EnhancedTable() {
@@ -215,6 +223,7 @@ export default function EnhancedTable() {
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [events, setEvent] = useState([]);
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -224,7 +233,7 @@ export default function EnhancedTable() {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelecteds = events.map((n) => n.task);
+            const newSelecteds = events.map((n) => n.onId);
             setSelected(newSelecteds);
             return;
         }
@@ -270,17 +279,13 @@ export default function EnhancedTable() {
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - events.length) : 0;
-    const [events, setEvent] = useState([]);
     const getEventData = async () => {
         try {
             const data = await axios.get("http://localhost:5000/todos/completed");
-            console.log(data.data);
             const rows = []
             for(let i = 0; i < data.data.length; i++) {
                 let resp = data.data[i]
-                if(resp.completed == true){
-                    rows.push(createData(resp.title, resp.notify, resp.end))
-                }
+                rows.push(createData(resp.title, resp.notify, resp.end, resp._id))
             }
             setEvent(rows);
         }catch (e) {
@@ -290,11 +295,10 @@ export default function EnhancedTable() {
         React.useEffect(() => {
             getEventData();
         }, []);
-
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
-                <EnhancedTableToolbar numSelected={selected.length} />
+                <EnhancedTableToolbar numSelected={selected.length}selectedItems={selected} />
                 <TableContainer>
                     <Table
                         sx={{ minWidth: 750 }}
@@ -315,17 +319,17 @@ export default function EnhancedTable() {
                             {stableSort(events, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
-                                    const isItemSelected = isSelected(row.task);
+                                    const isItemSelected = isSelected(row.obId);
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={(event) => handleClick(event, row.task)}
+                                            onClick={(event) => handleClick(event, row.obId)}
                                             role="checkbox"
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
-                                            key={row.task}
+                                            key={row.obId}
                                             selected={isItemSelected}
                                         >
                                             <TableCell padding="checkbox">

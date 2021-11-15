@@ -38,17 +38,28 @@ def login():
 @app.route('/todos', methods=['POST', 'GET'])
 def add_todo():
     if request.method == 'GET':
-        return jsonify(Todo().find_all()), 201
+        return jsonify(Todo().find_todos()), 201
     if request.method == 'POST':
         todoToAdd = request.get_json()
         newTodo = Todo(todoToAdd)
         newTodo.save()
         return jsonify(newTodo), 201
 
-@app.route('/todos/completed', methods=['PUT', 'GET'])
-def completed_Todo():
+@app.route('/todos/completed', methods=['GET'])
+def get_completed_Todo():
     if request.method == 'GET':
-        return jsonify(Todo().find_all()), 201
+        return jsonify(Todo().find_completed()), 201
+
+@app.route('/todos/completed/<id>', methods=['PUT'])
+def completed_Todos(id):
+    if request.method == 'PUT':
+        bool = request.get_json()
+        bool =  bool['completed']
+        if Todo().update_completed(id, bool): 
+            resp = jsonify({}), 204
+            return resp
+        else:
+           return jsonify({"error": "Todo not found"}), 404
 @app.route('/todos/<id>', methods=['GET', 'DELETE', 'PUT'])
 def get_todo(id):
     if request.method == 'GET':

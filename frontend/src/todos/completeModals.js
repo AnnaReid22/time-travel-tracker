@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { useHistory } from "react-router-dom";
 import CheckIcon from '@mui/icons-material/Check';
+import axios from 'axios';
 
 const style = {
     position: 'absolute',
@@ -22,17 +23,36 @@ const style = {
     boxShadow: 24,
     p: 4,
 };
-export function AddToCompleteModal () { 
+export function AddToCompleteModal (items) { 
     const history = useHistory();
 
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const handleRouteFinish = () =>{ 
+    const handleRouteComplete = () =>{ 
+        setCompleteToTrue()
         history.push("/finish");
-      }
-    const handleRouteT = () =>{ 
-        history.push("/todos");
+    }
+    async function setCompleteToTrue(){
+        const ids = items["selectedItems"]
+        for(let i = 0; i < ids.length; i++) {
+            const completed = {
+                completed: true
+            }
+            try {
+                const response = await axios.put('http://localhost:5000/todos/completed/' + ids[i], completed);
+                if(response.status === 204){
+                    console.log("completed was set to false")
+                }
+                else {
+                    console.log("Error, event not deleted from database.")
+                }
+            }
+            catch (error) {
+                console.log(error);
+                return false;
+            }
+        }
     }
     return (
         <div>
@@ -49,7 +69,7 @@ export function AddToCompleteModal () {
            <Typography id="modal-modal-title" variant="h5" component="h2">
              Add this task back to your todo list?
              <Stack direction="column" spacing={4}>
-                 <Button variant="contained" style={{ height: '45px', width: '310px', top: 10, left: 45 }} startIcon={<DoneAllIcon />}  onClick={handleRouteFinish}>
+                 <Button variant="contained" style={{ height: '45px', width: '310px', top: 10, left: 45 }} startIcon={<DoneAllIcon />}  onClick={handleRouteComplete}>
                     Yes, add to my completed list
                  </Button>
                  <Button variant="contained" style={{ height: '45px', width: '310px', top: 10, left: 45 }} startIcon={<RemoveDoneIcon />} onClick={handleClose}>
@@ -62,14 +82,35 @@ export function AddToCompleteModal () {
      </div>
     )
 }
-export function RemoveFromCompleteModal () { 
+export function RemoveFromCompleteModal (items) { 
     const history = useHistory();
-
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const handleRouteT = () =>{ 
+    const handleRouteTodo = () =>{ 
+        setCompleteToFalse()
         history.push("/todos");
+    }
+    async function setCompleteToFalse(){
+        const ids = items["selectedItems"]
+        for(let i = 0; i < ids.length; i++) {
+            const completed = {
+                completed: false
+            }
+            try {
+                const response = await axios.put('http://localhost:5000/todos/completed/' + ids[i], completed);
+                if(response.status === 204){
+                    console.log("completed was set to false")
+                }
+                else {
+                    console.log("Error, event not deleted from database.")
+                }
+            }
+            catch (error) {
+                console.log(error);
+                return false;
+            }
+        }
     }
     return (
         <div>
@@ -86,7 +127,7 @@ export function RemoveFromCompleteModal () {
                 <Typography id="modal-modal-title" variant="h5" component="h2">
                     Add this task back to your todo list?
                     <Stack direction="column" spacing={4}>
-                        <Button variant="contained" style={{ height: '45px', width: '310px', top: 10, left: 45 }} startIcon={<DoneAllIcon />}  onClick={handleRouteT}>
+                        <Button variant="contained" style={{ height: '45px', width: '310px', top: 10, left: 45 }} startIcon={<DoneAllIcon />}  onClick={handleRouteTodo}>
                             Yes, add to my todo list
                         </Button>
                         <Button variant="contained" style={{ height: '45px', width: '310px', top: 10, left: 45 }} startIcon={<RemoveDoneIcon />} onClick={handleClose}>
