@@ -7,7 +7,11 @@ import DialogContentText from '@mui/material/DialogContentText';
 import { MenuItem } from '@mui/material';
 import DialogTitle from '@mui/material/DialogTitle';
 import DateTimePicker from '@mui/lab/DateTimePicker';
+import { Checkbox } from '@mui/material';
+import { FormGroup } from '@mui/material';
+import { FormControlLabel } from '@mui/material';
 import axios from 'axios';
+import moment from "moment";
 
 export default function EditEventModal ({clicked, events, setEvents, setModal}) { 
     const [startDate, setStartDate] = React.useState(clicked.start);
@@ -16,6 +20,7 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
     const [important, setImportance] = React.useState(clicked.importance);
     const [title, setTitle] = React.useState(clicked.title);
     const [description, setDescription] = React.useState(clicked.description);
+    const [doNotPush, setDoNotPush] = React.useState(clicked.doNotPush);
 
     function handleClose() {
         setModal(false)
@@ -28,6 +33,10 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
     const handleChangeEndDate = (date) => {
         setEndDate(date);
     };
+
+    const handleChangeDoNotPush = () => {
+        setDoNotPush(!doNotPush)
+    }
 
     const handleChangeCategory = (cat) => {
         setCategory(cat.target.value);
@@ -57,12 +66,14 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
     async function updateEvent(){
         const event = {
             title: title,
-            start: new Date(startDate),
-            end: new Date(endDate),
+            start: doNotPush ? new Date(startDate) : moment(new Date(startDate)).subtract(important, 'day'),
+            end: doNotPush ? new Date(endDate) : moment(new Date(endDate)).subtract(important, 'day'),
             description: description,
             importance: important,
-            notify: new Date(endDate),
-            category: category
+            givenStart: new Date(startDate),
+            givenEnd: new Date(endDate),
+            category: category,
+            doNotPush: doNotPush
         }
         try {
             const response = await axios.put('http://localhost:5000/todos/' + clicked._id, event);
@@ -93,19 +104,19 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
 
     const importance = [
         {
-          value: '!',
+          value: 1,
           label: '!',
         },
         {
-          value: '!!',
+          value: 3,
           label: '!!',
         },
         {
-          value: '!!!',
+          value: 5,
           label: '!!!',
         },
         {
-          value: '!!!!',
+          value: 7,
           label: '!!!!',
         },
       ];
@@ -127,10 +138,10 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
 
     return (
         <div>
-            <DialogTitle>Add Event</DialogTitle>
+            <DialogTitle>Edit Event</DialogTitle>
             <DialogContent >
                 <DialogContentText style={{marginBottom: "30px"}}>
-                    Please enter the information below to add a new event!
+                    Please modify the information below to edit the event!
                 </DialogContentText>
                 <DateTimePicker
                     label="Start"
@@ -144,6 +155,13 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
                     onChange={handleChangeEndDate}
                     renderInput={(params) => <TextField {...params} />}
                 />
+                <FormGroup style={{marginBottom: "30px"}}>
+                    <FormControlLabel control=
+                        {<Checkbox
+                             checked={doNotPush}
+                             onChange={handleChangeDoNotPush}   
+                        />} label="Do NOT Push Up Date" />
+                </FormGroup>
                 <TextField
                     select
                     label="Select"
@@ -152,7 +170,7 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
                     helperText="Importance"
                     >
                     {importance.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
+                        <MenuItem key={option.label} value={option.value}>
                         {option.label}
                         </MenuItem>
                     ))}
