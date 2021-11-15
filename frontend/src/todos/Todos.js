@@ -37,12 +37,13 @@ import { useState } from "react";
   
 
 
-function createData(task, duedate, importance, obId) {
+function createData(task, duedate, importance, obId, category) {
   return {
     task,
     duedate,
     importance,
-    obId
+    obId,
+    category
   };
 }
 
@@ -138,6 +139,11 @@ const headCells = [
   },
   {
     id: 'id',
+    numeric: true,
+    disablePadding: false,
+  },
+  {
+    id: 'category',
     numeric: true,
     disablePadding: false,
   },
@@ -365,7 +371,7 @@ export default function EnhancedTable() {
             const rows = []
             for(let i = 0; i < data.data.length; i++) {
                 let resp = data.data[i]
-                rows.push(createData(resp.title, resp.end, resp.importance, resp._id))
+                rows.push(createData(resp.title, resp.end, resp.importance, resp._id, resp.category))
             }
             setEvent(rows);
         }catch (e) {
