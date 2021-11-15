@@ -7,7 +7,11 @@ import DialogContentText from '@mui/material/DialogContentText';
 import { MenuItem } from '@mui/material';
 import DialogTitle from '@mui/material/DialogTitle';
 import DateTimePicker from '@mui/lab/DateTimePicker';
+import { Checkbox } from '@mui/material';
+import { FormGroup } from '@mui/material';
+import { FormControlLabel } from '@mui/material';
 import axios from 'axios';
+import moment from "moment";
 
 export default function AddEventModal ({clicked, events, setEvents, setModal}) { 
     const [startDate, setStartDate] = React.useState(clicked.start);
@@ -16,6 +20,7 @@ export default function AddEventModal ({clicked, events, setEvents, setModal}) {
     const [important, setImportance] = React.useState('!');
     const [title, setTitle] = React.useState('');
     const [description, setDescription] = React.useState('');
+    const [doNotPush, setDoNotPush] = React.useState(false);
 
     function handleClose() {
         setModal(false)
@@ -30,6 +35,10 @@ export default function AddEventModal ({clicked, events, setEvents, setModal}) {
         setEndDate(date);
     };
 
+    const handleChangeDoNotPush = () => {
+        setDoNotPush(!doNotPush);
+    }
+
     const handleChangeCategory = (cat) => {
         setCategory(cat.target.value);
       };
@@ -41,13 +50,15 @@ export default function AddEventModal ({clicked, events, setEvents, setModal}) {
     async function addNewEvent(){
         const event = {
             title: title,
-            start: startDate,
-            end: endDate,
+            start: doNotPush ? startDate : moment(startDate).subtract(important, 'day'),
+            end: doNotPush ? endDate : moment(endDate).subtract(important, 'day'),
             description: description,
             importance: important,
-            notify: endDate,
+            givenStart: startDate,
+            givenEnd: endDate,
             category: category,
-            completed: false
+            doNotPush: doNotPush,
+            completed: false,
         }
         try {
             const response = await axios.post('http://localhost:5000/todos', event);
@@ -71,19 +82,19 @@ export default function AddEventModal ({clicked, events, setEvents, setModal}) {
 
     const importance = [
         {
-          value: '!',
+          value: 1,
           label: '!',
         },
         {
-          value: '!!',
+          value: 3,
           label: '!!',
         },
         {
-          value: '!!!',
+          value: 5,
           label: '!!!',
         },
         {
-          value: '!!!!',
+          value: 7,
           label: '!!!!',
         },
       ];
@@ -122,6 +133,12 @@ export default function AddEventModal ({clicked, events, setEvents, setModal}) {
                     onChange={handleChangeEndDate}
                     renderInput={(params) => <TextField {...params} />}
                 />
+                <FormGroup style={{marginBottom: "30px"}}>
+                    <FormControlLabel control=
+                        {<Checkbox  
+                             onClick={handleChangeDoNotPush}   
+                        />} label="Do NOT Push Up Date" />
+                </FormGroup>
                 <TextField
                     select
                     label="Select"
@@ -130,7 +147,7 @@ export default function AddEventModal ({clicked, events, setEvents, setModal}) {
                     helperText="Importance"
                     >
                     {importance.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
+                        <MenuItem key={option.label} value={option.value}>
                         {option.label}
                         </MenuItem>
                     ))}
