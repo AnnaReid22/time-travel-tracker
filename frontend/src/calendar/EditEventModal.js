@@ -73,7 +73,8 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
             givenStart: new Date(startDate),
             givenEnd: new Date(endDate),
             category: category,
-            doNotPush: doNotPush
+            doNotPush: doNotPush,
+            completed: false
         }
         try {
             const response = await axios.put('http://localhost:5000/todos/' + clicked._id, event);
