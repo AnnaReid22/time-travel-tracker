@@ -285,7 +285,7 @@ export default function EnhancedTable() {
             const rows = []
             for(let i = 0; i < data.data.length; i++) {
                 let resp = data.data[i]
-                rows.push(createData(resp.title, resp.notify, resp.end, resp._id))
+                rows.push(createData(resp.title, resp.end, resp.givenEnd, resp._id))
             }
             setEvent(rows);
         }catch (e) {
