@@ -90,6 +90,13 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
             if (!doNotPush && (importChanged || dateChanged)) {
                 event.start = moment(givenStart).subtract(important, 'day');
                 event.end = moment(givenEnd).subtract(important, 'day');
+                var difference = event.end.diff(event.start)
+                var today = new Date();
+                console.log(today)
+                if (event.start < today) {
+                    event.start = today;
+                    event.end = event.start + difference;
+                }
             }
             const response = await axios.put('http://localhost:5000/todos/' + clicked._id, event);
             if(response.status === 204){
