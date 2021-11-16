@@ -24,17 +24,22 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
     const [description, setDescription] = React.useState(clicked.description);
     const [doNotPush, setDoNotPush] = React.useState(clicked.doNotPush);
     const [importChanged, setImportChanged] = React.useState(false);
+    const [dateChanged, setDateChanged] = React.useState(false);
 
     function handleClose() {
         setModal(false)
     }
 
     const handleChangeStartDate = (date) => {
+        setStartDate(date);
         setGivenStart(date);
+        setDateChanged(true);
     };
 
     const handleChangeEndDate = (date) => {
+        setEndDate(date);
         setGivenEnd(date);
+        setDateChanged(true);
     };
 
     const handleChangeDoNotPush = () => {
@@ -68,19 +73,24 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
     }
 
     async function updateEvent(){
-        const event = {
+        var event = {
             title: title,
-            start: doNotPush || !importChanged ? startDate : moment(givenStart).subtract(important, 'day'),
-            end: doNotPush || !importChanged ? endDate : moment(givenEnd).subtract(important, 'day'),
+            start: startDate,
+            end: endDate,
             description: description,
             importance: important,
             givenStart: givenStart,
             givenEnd: givenEnd,
             category: category,
             doNotPush: doNotPush,
-            importChanged: importChanged
+            importChanged: importChanged,
+            dateChanged: dateChanged
         }
         try {
+            if (!doNotPush && (importChanged || dateChanged)) {
+                event.start = moment(givenStart).subtract(important, 'day');
+                event.end = moment(givenEnd).subtract(important, 'day');
+            }
             const response = await axios.put('http://localhost:5000/todos/' + clicked._id, event);
             if(response.status === 204){
                 events = events.filter(e => e._id !== clicked._id)
