@@ -18,20 +18,23 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
     const [endDate, setEndDate] = React.useState(clicked.end);
     const [category, setCategory] = React.useState(clicked.category);
     const [important, setImportance] = React.useState(clicked.importance);
+    const [givenStart, setGivenStart] = React.useState(clicked.givenStart);
+    const [givenEnd, setGivenEnd] = React.useState(clicked.givenEnd);
     const [title, setTitle] = React.useState(clicked.title);
     const [description, setDescription] = React.useState(clicked.description);
     const [doNotPush, setDoNotPush] = React.useState(clicked.doNotPush);
+    const [importChanged, setImportChanged] = React.useState(false);
 
     function handleClose() {
         setModal(false)
     }
 
     const handleChangeStartDate = (date) => {
-        setStartDate(date);
+        setGivenStart(date);
     };
 
     const handleChangeEndDate = (date) => {
-        setEndDate(date);
+        setGivenEnd(date);
     };
 
     const handleChangeDoNotPush = () => {
@@ -44,6 +47,7 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
 
     const handleChangeImportance = (im) => {
         setImportance(im.target.value);
+        setImportChanged(true);
       };
 
     async function deleteEvent(){
@@ -66,14 +70,15 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
     async function updateEvent(){
         const event = {
             title: title,
-            start: doNotPush ? new Date(startDate) : moment(new Date(startDate)).subtract(important, 'day'),
-            end: doNotPush ? new Date(endDate) : moment(new Date(endDate)).subtract(important, 'day'),
+            start: doNotPush || !importChanged ? startDate : moment(givenStart).subtract(important, 'day'),
+            end: doNotPush || !importChanged ? endDate : moment(givenEnd).subtract(important, 'day'),
             description: description,
             importance: important,
-            givenStart: new Date(startDate),
-            givenEnd: new Date(endDate),
+            givenStart: givenStart,
+            givenEnd: givenEnd,
             category: category,
-            doNotPush: doNotPush
+            doNotPush: doNotPush,
+            importChanged: importChanged
         }
         try {
             const response = await axios.put('http://localhost:5000/todos/' + clicked._id, event);
