@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import EditIcon from '@mui/icons-material/Edit';
 import Stack from '@mui/material/Stack';
 import Modal from '@mui/material/Modal';
 import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
@@ -115,7 +114,7 @@ export function RemoveFromCompleteModal (items) {
     return (
         <div>
             <IconButton >
-                <EditIcon onClick={handleOpen}/>     
+                <RemoveDoneIcon onClick={handleOpen}/>     
             </IconButton>
             <Modal
                 open={open}

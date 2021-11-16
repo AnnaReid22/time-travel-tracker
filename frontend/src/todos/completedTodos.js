@@ -22,6 +22,7 @@ import { useHistory } from "react-router-dom";
 import { RemoveFromCompleteModal } from "./completeModals";
 import axios from 'axios';
 import { useState } from "react";
+import moment from "moment";
 
 //TO REDIRECT TO CONFIRMATION PAGE OR OTHER PAGES 
 // it works sometimes... its a little odd 
@@ -224,6 +225,7 @@ export default function EnhancedTable() {
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [events, setEvent] = useState([]);
+    const importanceSymbol = ["", "!", "", "!!", "", "!!!", "", "!!!!"]
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -285,7 +287,9 @@ export default function EnhancedTable() {
             const rows = []
             for(let i = 0; i < data.data.length; i++) {
                 let resp = data.data[i]
-                rows.push(createData(resp.title, resp.end, resp.givenEnd, resp._id))
+                const date1 = moment(resp.end).format('L')
+                const date2 = moment(resp.givenEnd).format('L')
+                rows.push(createData(resp.title, date1, date2, resp._id))
             }
             setEvent(rows);
         }catch (e) {
