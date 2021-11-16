@@ -57,7 +57,8 @@ export default function AddEventModal ({clicked, events, setEvents, setModal}) {
             givenStart: startDate,
             givenEnd: endDate,
             category: category,
-            doNotPush: doNotPush
+            doNotPush: doNotPush,
+            completed: false
         }
         try {
             if (!doNotPush) {
