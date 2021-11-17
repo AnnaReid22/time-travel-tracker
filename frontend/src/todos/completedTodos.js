@@ -22,6 +22,7 @@ import { useHistory } from "react-router-dom";
 import { RemoveFromCompleteModal } from "./completeModals";
 import axios from 'axios';
 import { useState } from "react";
+import { Redirect } from 'react-router';
 
 //TO REDIRECT TO CONFIRMATION PAGE OR OTHER PAGES 
 // it works sometimes... its a little odd 
@@ -215,7 +216,7 @@ EnhancedTableToolbar.propTypes = {
     selectedItems: PropTypes.arrayOf(Object),
 };
 
-export default function EnhancedTable() {
+export default function EnhancedTable({loggedIn}) {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('actual');
     //const [orderBy, setOrderBy] = React.useState('importance');
@@ -295,6 +296,10 @@ export default function EnhancedTable() {
         React.useEffect(() => {
             getEventData();
         }, []);
+
+    if(!loggedIn){
+        return <Redirect to="/login"></Redirect>
+        }
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2 }}>

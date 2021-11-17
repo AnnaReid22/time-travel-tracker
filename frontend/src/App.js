@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./App.css";
 import Todos from "./todos/Todos.js";
 import Settings from "./settings/Settings.js";
@@ -6,38 +7,52 @@ import Register from "./users/Register.js";
 import Calendar from "./calendar/Calendar.js";
 import Finish from "./tasks/finishTaskPage";
 import Complete from "./todos/completedTodos.js";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import DateAdapter from '@mui/lab/AdapterMoment';
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 
+function getLoggedIn() {
+  const tokenString = sessionStorage.getItem('loggedIn');
+  const userToken = JSON.parse(tokenString);
+  if(userToken){
+    return true
+  }
+  else{
+    return false
+  }
+}
+
 function App() {
+  const [loggedIn, setLoggedIn] = useState(getLoggedIn() ? true : false );
+  console.log("app " + loggedIn)
   return (
     <LocalizationProvider dateAdapter={DateAdapter}>
       <BrowserRouter>
+        <Route path="/login" >
+          <Users setLoggedIn={setLoggedIn}/>
+        </Route>
         <Route path="/todos">
-          <Todos />
+          <Todos loggedIn={loggedIn}/>
         </Route>
         <Route path="/settings">
-          <Settings />
+          <Settings setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
         </Route>
         <Route path="/register">
-          <Register />
-        </Route>
-        <Route path="/login">
-          <Users />
+          <Register setLoggedIn={setLoggedIn}/>
         </Route>
         <Route path="/calendar">
-          <Calendar />
+          <Calendar loggedIn={loggedIn}/>
         </Route>
         <Route path="/finish">
-          <Finish />
+          <Finish loggedIn={loggedIn}/>
         </Route>
         <Route path="/completed">
-          <Complete />
+          <Complete loggedIn={loggedIn}/>
         </Route>
       </BrowserRouter>
     </LocalizationProvider>
   );
+  // }
 }
 
 export default App;

@@ -29,6 +29,7 @@ import { useHistory } from "react-router-dom";
 import { AddToCompleteModal } from "./completeModals";
 import axios from 'axios';
 import { useState } from "react";
+import { Redirect } from 'react-router';
 //TO REDIRECT TO CONFIRMATION PAGE OR OTHER PAGES 
 // it works sometimes... its a little odd 
  //  <Redirect to = "/confirmation"/>
@@ -295,7 +296,7 @@ EnhancedTableToolbar.propTypes = {
   selectedItems: PropTypes.arrayOf(Object),
 };
 
-export default function EnhancedTable() {
+export default function EnhancedTable({loggedIn}) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('importance');
   //const [orderBy, setOrderBy] = React.useState('importance');
@@ -304,6 +305,8 @@ export default function EnhancedTable() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [events, setEvent] = useState([]);
+
+
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -319,6 +322,7 @@ export default function EnhancedTable() {
     }
     setSelected([]);
   };
+
 
 
   const handleClick = (event, task) => {
@@ -375,6 +379,9 @@ export default function EnhancedTable() {
         React.useEffect(() => {
             getEventData();
         }, []);
+  if(!loggedIn){
+    return <Redirect to="/login"></Redirect>
+  }
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>

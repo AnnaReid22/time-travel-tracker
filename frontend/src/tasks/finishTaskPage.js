@@ -3,9 +3,10 @@ import Button from '@mui/material/Button';
 import { Typography } from '@mui/material'
 import Confetti from 'react-confetti';
 import { useHistory } from "react-router-dom";
+import { Redirect } from 'react-router';
 
 
-export default function IconLabelButtons() {
+export default function IconLabelButtons({loggedIn}) {
    
   const history = useHistory();
 
@@ -16,7 +17,9 @@ export default function IconLabelButtons() {
   const handleRouteCal = () =>{ 
     history.push("/calendar");
   }
-
+  if(!loggedIn){
+    return <Redirect to="/login"></Redirect>
+  }
     return (
         <Typography variant="h4" mt={20} ml={60}>
             {"You did it!"}
