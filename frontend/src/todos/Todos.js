@@ -373,7 +373,7 @@ export default function EnhancedTable() {
             const rows = []
             for(let i = 0; i < data.data.length; i++) {
                 let resp = data.data[i]
-                const date = moment(resp.end).format('L')
+                const date = moment(resp.end).format('L, h:mm a')
                 const importance = importanceSymbol[resp.importance]
                 rows.push(createData(resp.title, date, importance, resp._id, resp.category))
             }

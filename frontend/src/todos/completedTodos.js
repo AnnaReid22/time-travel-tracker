@@ -287,8 +287,8 @@ export default function EnhancedTable() {
             const rows = []
             for(let i = 0; i < data.data.length; i++) {
                 let resp = data.data[i]
-                const date1 = moment(resp.end).format('L')
-                const date2 = moment(resp.givenEnd).format('L')
+                const date1 = moment(resp.end).format('L, h:mm a')  
+                const date2 = moment(resp.givenEnd).format('L, h:mm a')
                 rows.push(createData(resp.title, date1, date2, resp._id))
             }
             setEvent(rows);
