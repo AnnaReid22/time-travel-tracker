@@ -225,7 +225,6 @@ export default function EnhancedTable() {
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [events, setEvent] = useState([]);
-    const importanceSymbol = ["", "!", "", "!!", "", "!!!", "", "!!!!"]
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
