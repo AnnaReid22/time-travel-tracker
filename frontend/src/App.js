@@ -7,7 +7,7 @@ import Register from "./users/Register.js";
 import Calendar from "./calendar/Calendar.js";
 import Finish from "./tasks/finishTaskPage";
 import Complete from "./todos/completedTodos.js";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route } from "react-router-dom";
 import DateAdapter from '@mui/lab/AdapterMoment';
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 
