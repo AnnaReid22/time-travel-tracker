@@ -34,6 +34,7 @@ const filters = [
 
 ];
 
+
 function getStyles(label, filter, theme) {
   return {
     fontWeight:
@@ -46,7 +47,17 @@ function getStyles(label, filter, theme) {
 export default function MultipleSelectChip() {
   const theme = useTheme();
   const [filter, setFilter] = React.useState([]);
+  const [open, setOpen] = React.useState(false);
 
+  const handleClose = () => {
+  setOpen(false);
+};
+
+const handleClear = (event)=>{
+  setFilter(
+    []
+  )
+}
   const handleChange = (event) => {
     const {
       target: { value },
@@ -55,6 +66,8 @@ export default function MultipleSelectChip() {
       // On autofill we get a the stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );
+
+    console.log(filter);
   };
 
   return (
@@ -88,20 +101,21 @@ export default function MultipleSelectChip() {
             </MenuItem>
           ))}
         </Select>
-        <Button
+        { <Button onClick = {handleClear}
           variant="outlined"
           style={{ width: "300px", top:5 }}
           startIcon={< ClearIcon/>}
         >
           Clear 
         </Button>
-        <Button
+        /*
+        <Button onClick={handleClose}
           variant="outlined"
           style={{ width: "300px", top: 10}}
           startIcon={<AddIcon />}
         >
           Apply 
-        </Button>
+        </Button> */}
         
       </FormControl>
      
