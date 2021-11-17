@@ -28,7 +28,6 @@ import Filter from "./filter.js";
 import { useHistory } from "react-router-dom";
 import AddIcon from '@mui/icons-material/Add';
 import { AddToCompleteModal } from "./completeModals";
-import ClearIcon from '@mui/icons-material/Clear';
 import axios from 'axios';
 import { useState } from "react";
 //TO REDIRECT TO CONFIRMATION PAGE OR OTHER PAGES 
@@ -293,7 +292,7 @@ const EnhancedTableToolbar = (props) => {
         
       )}
 
-      {numSelected == 1 ? (
+      {numSelected === 1 ? (
           <AddToCompleteModal selectedItems = {selectedItems} />
              
       ) : (

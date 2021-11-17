@@ -8,7 +8,6 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Chip from '@mui/material/Chip';
 import { Button } from '@mui/material';
-import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from '@mui/icons-material/Clear';
 
 
@@ -47,11 +46,11 @@ function getStyles(label, filter, theme) {
 export default function MultipleSelectChip() {
   const theme = useTheme();
   const [filter, setFilter] = React.useState([]);
-  const [open, setOpen] = React.useState(false);
+  //const [open, setOpen] = React.useState(false);
 
-  const handleClose = () => {
-  setOpen(false);
-};
+//   const handleClose = () => {
+//   setOpen(false);
+// };
 
 const handleClear = (event)=>{
   setFilter(
