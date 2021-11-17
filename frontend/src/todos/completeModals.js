@@ -65,8 +65,8 @@ export function AddToCompleteModal (items) {
              aria-describedby="modal-modal-description"
          >
          <Box sx={style}>
-           <Typography id="modal-modal-title" variant="h5" component="h2">
-             Add this task back to your todo list?
+           <Typography id="modal-modal-title" variant="h5" component="h2"align={"center"}>
+            Have you completed this task?
              <Stack direction="column" spacing={4}>
                  <Button variant="contained" style={{ height: '45px', width: '310px', top: 10, left: 45 }} startIcon={<DoneAllIcon />}  onClick={handleRouteComplete}>
                     Yes, add to my completed list
