@@ -2,7 +2,7 @@ name: CSC307 Frontend CI
 
 on:
   push:
-    branches: [test-gh-actions]
+    branches: [main]
   pull_request:
     branches: [main]
 

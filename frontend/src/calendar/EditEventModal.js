@@ -18,9 +18,13 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
     const [endDate, setEndDate] = React.useState(clicked.end);
     const [category, setCategory] = React.useState(clicked.category);
     const [important, setImportance] = React.useState(clicked.importance);
+    const [givenStart, setGivenStart] = React.useState(clicked.givenStart);
+    const [givenEnd, setGivenEnd] = React.useState(clicked.givenEnd);
     const [title, setTitle] = React.useState(clicked.title);
     const [description, setDescription] = React.useState(clicked.description);
     const [doNotPush, setDoNotPush] = React.useState(clicked.doNotPush);
+    const [importChanged, setImportChanged] = React.useState(false);
+    const [dateChanged, setDateChanged] = React.useState(false);
 
     function handleClose() {
         setModal(false)
@@ -28,10 +32,14 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
 
     const handleChangeStartDate = (date) => {
         setStartDate(date);
+        setGivenStart(date);
+        setDateChanged(true);
     };
 
     const handleChangeEndDate = (date) => {
         setEndDate(date);
+        setGivenEnd(date);
+        setDateChanged(true);
     };
 
     const handleChangeDoNotPush = () => {
@@ -44,6 +52,7 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
 
     const handleChangeImportance = (im) => {
         setImportance(im.target.value);
+        setImportChanged(true);
       };
 
     async function deleteEvent(){
@@ -64,19 +73,33 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
     }
 
     async function updateEvent(){
-        const event = {
+        var event = {
             title: title,
-            start: doNotPush ? new Date(startDate) : moment(new Date(startDate)).subtract(important, 'day'),
-            end: doNotPush ? new Date(endDate) : moment(new Date(endDate)).subtract(important, 'day'),
+            start: startDate,
+            end: endDate,
             description: description,
             importance: important,
-            givenStart: new Date(startDate),
-            givenEnd: new Date(endDate),
+            givenStart: givenStart,
+            givenEnd: givenEnd,
             category: category,
             doNotPush: doNotPush,
+            importChanged: importChanged,
+            dateChanged: dateChanged,
             completed: false
         }
         try {
+            if (!doNotPush && (importChanged || dateChanged)) {
+                event.start = moment(givenStart).subtract(important, 'day');
+                event.end = moment(givenEnd).subtract(important, 'day');
+                var difference = moment(event.end).diff(event.start, 'hours')
+                console.log(difference)
+                var today = new Date();
+                console.log(today)
+                if (event.start < today) {
+                    event.start = today.setHours(0,0,0,0);
+                    event.end = moment(event.start).add(difference, 'hours');
+                }
+            }
             const response = await axios.put('http://localhost:5000/todos/' + clicked._id, event);
             if(response.status === 204){
                 events = events.filter(e => e._id !== clicked._id)
