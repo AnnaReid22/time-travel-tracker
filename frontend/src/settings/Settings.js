@@ -8,9 +8,7 @@ import { Redirect } from "react-router";
 
 export default function IconLabelButtons({loggedIn, setLoggedIn}) {
   function handleLogout(){
-    console.log("1st logged in in logout" + loggedIn)
     setLoggedIn(false)
-    console.log("2nd logged in in logout" + loggedIn)
     sessionStorage.removeItem('loggedIn');
   }
 
