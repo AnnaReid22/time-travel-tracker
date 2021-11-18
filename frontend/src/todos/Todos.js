@@ -30,6 +30,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { AddToCompleteModal } from "./completeModals";
 import axios from 'axios';
 import { useState } from "react";
+import moment from "moment";
 //TO REDIRECT TO CONFIRMATION PAGE OR OTHER PAGES 
 // it works sometimes... its a little odd 
  //  <Redirect to = "/confirmation"/>
@@ -68,7 +69,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 const BootstrapDialogTitle = (props) => {
-  const { children, onClose, ...other } = props;
+  const { children, onClose, ...other} = props;
   return (
     <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
       {children}
@@ -202,6 +203,7 @@ EnhancedTableHead.propTypes = {
 const EnhancedTableToolbar = (props) => {
     
   const [open, setOpen] = React.useState(false);
+  const [days, setDays] = useState([]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -210,13 +212,39 @@ const EnhancedTableToolbar = (props) => {
     setOpen(false);
   };
 
-  const history = useHistory();
+  const handleDayClick= () =>{
+  var today = new Date();
 
+  today.setHours(0, 0);
+  const formatTodayStart = moment(today).format('L, h:mm a')
+  
+  today.setHours(23, 59);
+  const formatTodayEnd = moment(today).format('L, h:mm a')
+
+  setDays([formatTodayStart, formatTodayEnd]);
+  console.log(days);
+
+  };
+
+  const handleWeekClick= () =>{
+    var today = new Date()
+    var firstDay = new Date(today.setDate(today.getDate() - today.getDay()));
+    var lastDay = new Date(today.setDate(today.getDate() - today.getDay()+6));
+
+    firstDay.setHours(0, 0);
+    lastDay.setHours(23, 59);
+    const formatTodayStart = moment(firstDay).format('L, h:mm a')
+    const formatTodayEnd = moment(lastDay).format('L, h:mm a')
+
+    setDays([formatTodayStart, formatTodayEnd]);
+    console.log(days);
+    };
+
+  const history = useHistory();
 
   const handleRouteCom = () =>{ 
     history.push("/completed");
   }
-
 
   const { numSelected } = props;
   const { selectedItems } = props;
@@ -260,11 +288,11 @@ const EnhancedTableToolbar = (props) => {
        All Tasks
       </Button>
 
-      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left:75 }}>
+      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left:75 }} onClick = {handleDayClick}>
        Today
       </Button>
 
-      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 80 }}>
+      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 80 }} onClick = {handleWeekClick}>
        Week
       </Button>
 
@@ -340,6 +368,7 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [events, setEvent] = useState([]);
 
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -400,7 +429,12 @@ export default function EnhancedTable() {
             const rows = []
             for(let i = 0; i < data.data.length; i++) {
                 let resp = data.data[i]
+                let year =  resp.end.substring(0, 4);
+                let month = resp.end.substring(5, 7);
+                let day = resp.end.substring(8, 10);
+                //if(resp.end.getDate() == 18){
                 rows.push(createData(resp.title, resp.end, resp.importance, resp._id))
+                //}
             }
             setEvent(rows);
         }catch (e) {
