@@ -86,12 +86,10 @@ class Todo(Model):
         return todos
         
     def update_completed(self, id, bool):
-        return self.collection.update(
+        return self.collection.update_one(
             {"_id": ObjectId(id) },
-            { "$set":
-                {
-                    "completed": bool
-                }})
+            { "$set":{"completed": bool}},
+            upsert=False)
 
     def update_one(self, id, replacement):
         return self.collection.update_one(
