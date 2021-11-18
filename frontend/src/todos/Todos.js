@@ -37,12 +37,13 @@ import moment from "moment";
 
 
 
-function createData(task, duedate, importance, obId) {
+function createData(task, duedate, importance, obId, category) {
   return {
     task,
     duedate,
     importance,
-    obId
+    obId,
+    category
   };
 }
 
@@ -149,7 +150,13 @@ const headCells = [
     numeric: true,
     disablePadding: false,
   },
+  {
+    id: 'category',
+    numeric: true,
+    disablePadding: false,
+  },
 ];
+const importanceSymbol = ["", "!", "", "!!", "", "!!!", "", "!!!!"]
 
 function EnhancedTableHead(props) {
   const {order, orderBy, onRequestSort } =
@@ -432,9 +439,9 @@ export default function EnhancedTable() {
                 let year =  resp.end.substring(0, 4);
                 let month = resp.end.substring(5, 7);
                 let day = resp.end.substring(8, 10);
-                //if(resp.end.getDate() == 18){
-                rows.push(createData(resp.title, resp.end, resp.importance, resp._id))
-                //}
+                const date = moment(resp.end).format('L, h:mm a')
+                const importance = importanceSymbol[resp.importance]
+                rows.push(createData(resp.title, date, importance, resp._id, resp.category))
             }
             setEvent(rows);
         }catch (e) {
