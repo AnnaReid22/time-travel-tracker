@@ -29,6 +29,7 @@ import { useHistory } from "react-router-dom";
 import { AddToCompleteModal } from "./completeModals";
 import axios from 'axios';
 import { useState } from "react";
+import moment from "moment";
 //TO REDIRECT TO CONFIRMATION PAGE OR OTHER PAGES 
 // it works sometimes... its a little odd 
  //  <Redirect to = "/confirmation"/>
@@ -37,12 +38,13 @@ import { useState } from "react";
   
 
 
-function createData(task, duedate, importance, obId) {
+function createData(task, duedate, importance, obId, category) {
   return {
     task,
     duedate,
     importance,
-    obId
+    obId,
+    category
   };
 }
 
@@ -141,7 +143,13 @@ const headCells = [
     numeric: true,
     disablePadding: false,
   },
+  {
+    id: 'category',
+    numeric: true,
+    disablePadding: false,
+  },
 ];
+const importanceSymbol = ["", "!", "", "!!", "", "!!!", "", "!!!!"]
 
 function EnhancedTableHead(props) {
   const {order, orderBy, onRequestSort } =
@@ -365,7 +373,9 @@ export default function EnhancedTable() {
             const rows = []
             for(let i = 0; i < data.data.length; i++) {
                 let resp = data.data[i]
-                rows.push(createData(resp.title, resp.end, resp.importance, resp._id))
+                const date = moment(resp.end).format('L, h:mm a')
+                const importance = importanceSymbol[resp.importance]
+                rows.push(createData(resp.title, date, importance, resp._id, resp.category))
             }
             setEvent(rows);
         }catch (e) {
