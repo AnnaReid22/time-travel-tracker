@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import EditIcon from '@mui/icons-material/Edit';
 import Stack from '@mui/material/Stack';
 import Modal from '@mui/material/Modal';
 import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
@@ -11,6 +10,7 @@ import Button from '@mui/material/Button';
 import { useHistory } from "react-router-dom";
 import CheckIcon from '@mui/icons-material/Check';
 import axios from 'axios';
+import EditIcon from '@mui/icons-material/Edit';
 
 const style = {
     position: 'absolute',
@@ -59,6 +59,9 @@ export function AddToCompleteModal (items) {
          <IconButton >
              <CheckIcon onClick={handleOpen}/>     
          </IconButton>
+         <IconButton >
+             <EditIcon />  
+         </IconButton>
          <Modal
              open={open}
              onClose={handleClose}
@@ -66,8 +69,8 @@ export function AddToCompleteModal (items) {
              aria-describedby="modal-modal-description"
          >
          <Box sx={style}>
-           <Typography id="modal-modal-title" variant="h5" component="h2">
-             Add this task back to your todo list?
+           <Typography id="modal-modal-title" variant="h5" component="h2"align={"center"}>
+            Have you completed this task?
              <Stack direction="column" spacing={4}>
                  <Button variant="contained" style={{ height: '45px', width: '310px', top: 10, left: 45 }} startIcon={<DoneAllIcon />}  onClick={handleRouteComplete}>
                     Yes, add to my completed list
@@ -115,7 +118,7 @@ export function RemoveFromCompleteModal (items) {
     return (
         <div>
             <IconButton >
-                <EditIcon onClick={handleOpen}/>     
+                <RemoveDoneIcon onClick={handleOpen}/>     
             </IconButton>
             <Modal
                 open={open}
