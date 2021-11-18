@@ -57,3 +57,14 @@ def test_encrypt_password_fail():
     temp_user = model_mongodb.User(temp_model)
     temp_user.encryptPassword()
     assert(temp_user.password != exp)
+
+def test_find_all():  
+    user = {
+        "_id":"617ef920ddb23b7f7447370c",
+        "firstName":"ohmygod",
+        "lastName":"ohmygod",
+        "email":"oh@mygod.com",
+        "password":"killme",
+        "cPass":"killme"
+    }
+    assert user in model_mongodb.User().find_all()
