@@ -6,11 +6,12 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import Dialog from '@mui/material/Dialog';
 import AddEventModal from "./AddEventModal";
 import EditEventModal from "./EditEventModal";
+import { Redirect } from "react-router";
 
 const localizer = momentLocalizer(moment);
 let allViews = Object.keys(Views).map(k => Views[k])
 
-export default function MyCalendar() {
+export default function MyCalendar({loggedIn}) {
   const [events, setEvents]= useState([]);
   const [modalAdd, setModalAdd]= useState(false);
   const [modalEdit, setModalEdit]= useState(false);
@@ -62,7 +63,9 @@ export default function MyCalendar() {
   function handleCloseEdit() {
     setModalEdit(false)
   }
-
+  if(!loggedIn){
+    return <Redirect to="/login"></Redirect>
+  }
   return (
     <div>
       <Calendar
