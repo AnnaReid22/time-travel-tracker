@@ -26,6 +26,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import CloseIcon from '@mui/icons-material/Close';
 import Filter from "./filter.js";
 import { useHistory } from "react-router-dom";
+import AddIcon from '@mui/icons-material/Add';
 import { AddToCompleteModal } from "./completeModals";
 import axios from 'axios';
 import { useState } from "react";
@@ -34,8 +35,6 @@ import moment from "moment";
 // it works sometimes... its a little odd 
  //  <Redirect to = "/confirmation"/>
 
-
-  
 
 
 function createData(task, duedate, importance, obId, category) {
@@ -72,7 +71,6 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 const BootstrapDialogTitle = (props) => {
   const { children, onClose, ...other } = props;
-
   return (
     <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
       {children}
@@ -89,7 +87,16 @@ const BootstrapDialogTitle = (props) => {
         >
           <CloseIcon />
         </IconButton>
+        
       ) : null}
+        <Button
+          variant="outlined"
+          style={{ width: "300px", left: 25, top: -15}}
+          startIcon={<AddIcon />}
+        >
+          Apply 
+        </Button>
+      
     </DialogTitle>
   );
 };
@@ -218,6 +225,7 @@ const EnhancedTableToolbar = (props) => {
     history.push("/completed");
   }
 
+
   const { numSelected } = props;
   const { selectedItems } = props;
 
@@ -240,7 +248,7 @@ const EnhancedTableToolbar = (props) => {
           variant="subtitle1"
           component="div"
         >
-          {numSelected} selected
+          {numSelected} selected 
         </Typography>
       ) : (
         <Typography
@@ -250,30 +258,29 @@ const EnhancedTableToolbar = (props) => {
           component="div"
         >
           To Do List
-        <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 65 }}>
+
+        <Button variant="outlined" style={{ height: '45px', width: '100px', top: 10, left: 65 }}>
+          <AddIcon/>
+       Add
+      </Button>
+
+        <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 70 }}>
        All Tasks
       </Button>
 
-      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left:70 }}>
+      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left:75 }}>
        Today
       </Button>
 
-      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 75 }}>
+      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 80 }}>
        Week
       </Button>
 
-      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 80 }} onClick = {handleRouteCom}>
+      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 85 }} onClick = {handleRouteCom}>
        Completed 
       </Button>
-        </Typography>
-        
-      )}
 
-      {numSelected > 0 ? (
-                <AddToCompleteModal selectedItems = {selectedItems} />
-      ) : (
-        <div>
-        <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10}} onClick={handleClickOpen}>
+      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 200}} onClick={handleClickOpen}>
         <FilterListIcon />
           Filter
         </Button>
@@ -289,8 +296,36 @@ const EnhancedTableToolbar = (props) => {
             
           </BootstrapDialogTitle>
         </BootstrapDialog>
+        </Typography>
+        
+      )}
+
+      {numSelected === 1 ? (
+          <AddToCompleteModal selectedItems = {selectedItems} />
+             
+      ) : (
+        <div>
+          
       </div>
       )}
+
+{numSelected >= 2 ? (
+               < Typography
+               sx={{ flex: '1 1 100%' }}
+               align = "right"
+               variant="h6"
+               id="tableTitle"
+               component="div"
+             >
+               Please select one event
+              </Typography>
+      ) : (
+        <div>
+      </div>
+      )}
+
+
+      
 
     </Toolbar>
 

@@ -11,6 +11,7 @@ import { useHistory } from "react-router-dom";
 import CheckIcon from '@mui/icons-material/Check';
 import axios from 'axios';
 
+
 const style = {
     position: 'absolute',
     top: '50%',
@@ -57,6 +58,9 @@ export function AddToCompleteModal (items) {
         <div>
          <IconButton >
              <CheckIcon onClick={handleOpen}/>     
+         </IconButton>
+         <IconButton >
+             <EditIcon />  
          </IconButton>
          <Modal
              open={open}
