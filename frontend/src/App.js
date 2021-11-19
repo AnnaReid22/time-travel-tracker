@@ -30,9 +30,6 @@ function App() {
         <Route path="/login" >
           <Users setLoggedIn={setLoggedIn}/>
         </Route>
-        <Route path="/">
-          <Todos loggedIn={loggedIn}/>
-        </Route>
         <Route path="/todos">
           <Todos loggedIn={loggedIn}/>
         </Route>
