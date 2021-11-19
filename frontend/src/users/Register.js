@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import validator from 'validator';
 import { useHistory } from 'react-router-dom';
 
-export default function FormPropsTextFields(props) {
+export default function FormPropsTextFields({ setLoggedIn }) {
     let history = useHistory();
     const [user, setUser] = useState({
         firstName: "",
@@ -90,7 +90,9 @@ export default function FormPropsTextFields(props) {
         try {
            const response = await axios.post('http://127.0.0.1:5000/users', user);
            if (response.status === 201) {
-             console.log("201");
+            setLoggedIn(true)
+            sessionStorage.setItem('loggedIn', JSON.stringify(true));
+            console.log("201");
            }
            return response.status;
         }
@@ -100,10 +102,6 @@ export default function FormPropsTextFields(props) {
         }
     }
 
-    /* function submitForm() {
-        props.handleSubmit(user);
-        setUser({ firstName: "", lastName: "", email: "", password: "" });
-    } */
 
     return (
         <div className="registerBox">
