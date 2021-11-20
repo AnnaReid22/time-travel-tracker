@@ -503,7 +503,7 @@ export default function EnhancedTable({ loggedIn }) {
         // console.log(resp.end)
         // console.log(date)
         const importance = importanceSymbol[resp.importance]
-        if (resp.display == true)
+        if (resp.display === true)
           rows.push(createData(resp.title, date, importance, resp._id, resp.category))
       }
       setEvent(rows);
