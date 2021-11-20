@@ -60,6 +60,18 @@ def completed_Todos(id):
             return resp
         else:
            return jsonify({"error": "Todo not found"}), 404
+
+@app.route('/todos/id/<id>', methods=['PUT'])
+def display_Todos(id):
+    if request.method == 'PUT':
+        bool = request.get_json()
+        bool =  bool['display']
+        if Todo().update_display(id, bool): 
+            resp = jsonify({}), 210
+            return resp
+        else:
+           return jsonify({"error": "Todo not found"}), 404
+
 @app.route('/todos/<id>', methods=['GET', 'DELETE', 'PUT'])
 def get_todo(id):
     if request.method == 'GET':
