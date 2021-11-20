@@ -210,7 +210,7 @@ EnhancedTableHead.propTypes = {
 const EnhancedTableToolbar = (props) => {
 
   const [open, setOpen] = React.useState(false);
-  const [days, setDays] = useState([]);
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -231,26 +231,6 @@ const EnhancedTableToolbar = (props) => {
       return false;
     }
   };
-
-  async function setAllDisplayToTrue() {
-    const data = await fetchAll()
-    console.log(data)
-
-    for (let i = 0; i < data.length; i++) {
-      console.log(data[i].end);
-      const display = {
-        display: true
-      }
-      try {
-        const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
-        console.log(response);
-      }
-      catch (error) {
-        console.log(error);
-        return false;
-      }
-    }
-  }
 
 
   // //ACTUAL ALL BUTTON ACTION
@@ -297,9 +277,9 @@ const EnhancedTableToolbar = (props) => {
         display: false
       }
       try {
-        if(year != todayYear || month != todayMonth || day != todayDay){
+        if(year !== todayYear || month !== todayMonth || day !== todayDay){
         const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
-        //console.log(response);
+        console.log(response);
         }
       }
       catch (error) {
@@ -311,6 +291,7 @@ const EnhancedTableToolbar = (props) => {
 
   async function handleDayClick() {
     const resp = await setTodayDisplayToTrue()
+    console.log(resp);
     window.location.reload(false);
   };
 
@@ -318,21 +299,12 @@ const EnhancedTableToolbar = (props) => {
 
   async function handleAllClick() {
     const resp = await setAllDisplayToTrue()
+    console.log(resp);
     window.location.reload(false);
   };
 
   const handleWeekClick = () => {
-    var today = new Date()
-    var firstDay = new Date(today.setDate(today.getDate() - today.getDay()));
-    var lastDay = new Date(today.setDate(today.getDate() - today.getDay() + 6));
 
-    firstDay.setHours(0, 0);
-    lastDay.setHours(23, 59);
-    //const formatStart = moment(firstDay).format('L, h:mm a')
-    //const formatEnd = moment(lastDay).format('L, h:mm a')
-
-    setDays([firstDay, lastDay]);
-    //console.log(days);
   };
 
   const history = useHistory();
