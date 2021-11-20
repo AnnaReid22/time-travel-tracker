@@ -252,29 +252,6 @@ const EnhancedTableToolbar = (props) => {
     }
   }
 
-  async function setTodayDisplayToTrue() {
-    const data = await fetchAll()
-    //console.log(data)
-    var today = new Date();
-    var endToday = new Date();
-    today.setHours(0, 0);
-    endToday.setHours(23, 59);
-
-    for (let i = 0; i < data.length; i++) {
-      const display = {
-        display: true
-      }
-      try {
-        console.log(data)
-        // const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
-        // console.log(response);
-      }
-      catch (error) {
-        console.log(error);
-        return false;
-      }
-    }
-  }
 
   // //ACTUAL ALL BUTTON ACTION
   async function setAllDisplayToTrue(){
