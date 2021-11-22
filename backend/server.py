@@ -1,21 +1,30 @@
+from flask.helpers import send_from_directory
 import pymongo
 from flask import Flask
 from flask import request
 from flask import jsonify
+import os
 import json
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from model_mongodb import User
 from model_mongodb import Todo
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='./build', static_url_path='/')
 CORS(app)
 
 @app.route('/')
-def hello_world():
-    return 'Hello, World!'
+@cross_origin
+def index():
+    return app.send_static_file('index.html')
+
+
+@app.errorhandler(404)
+def not_found(e):
+    return app.send_static_file('index.html')
 
 #login API routes
 @app.route('/users', methods=['POST'])
+@cross_origin
 def register_user():
     userToAdd = request.get_json()
     newUser = User(userToAdd)
@@ -36,6 +45,7 @@ def login():
 
 #Todos API routes
 @app.route('/todos', methods=['POST', 'GET'])
+@cross_origin
 def add_todo():
     if request.method == 'GET':
         return jsonify(Todo().find_todos()), 201
@@ -46,11 +56,13 @@ def add_todo():
         return jsonify(newTodo), 201
 
 @app.route('/todos/completed', methods=['GET'])
+@cross_origin
 def get_completed_Todo():
     if request.method == 'GET':
         return jsonify(Todo().find_completed()), 201
 
 @app.route('/todos/completed/<id>', methods=['PUT'])
+@cross_origin
 def completed_Todos(id):
     if request.method == 'PUT':
         bool = request.get_json()
@@ -61,6 +73,7 @@ def completed_Todos(id):
         else:
            return jsonify({"error": "Todo not found"}), 404
 @app.route('/todos/<id>', methods=['GET', 'DELETE', 'PUT'])
+@cross_origin
 def get_todo(id):
     if request.method == 'GET':
         todo = Todo({"_id": id})

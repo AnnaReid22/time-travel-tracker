@@ -1,6 +1,7 @@
 {
   "name": "frontend",
   "version": "0.1.0",
+  "proxy": "https://cryptic-bastion-64970.herokuapp.com/",
   "private": true,
   "dependencies": {
     "@date-io/moment": "^2.11.0",
