@@ -13,7 +13,7 @@ import { FormControlLabel } from '@mui/material';
 import axios from 'axios';
 import moment from "moment";
 
-export default function AddEventModal ({clicked, events, setEvents, setModal}) { 
+export default function AddEventModal ({clicked, events, setEvents, setModal, userID}) { 
     const [startDate, setStartDate] = React.useState(clicked.start);
     const [endDate, setEndDate] = React.useState(clicked.end);
     const [category, setCategory] = React.useState('Other');
@@ -58,7 +58,8 @@ export default function AddEventModal ({clicked, events, setEvents, setModal}) {
             givenEnd: endDate,
             category: category,
             doNotPush: doNotPush,
-            completed: false
+            completed: false,
+            user: userID
         }
         try {
             if (!doNotPush) {
@@ -74,6 +75,7 @@ export default function AddEventModal ({clicked, events, setEvents, setModal}) {
                     event.end = moment(event.start).add(difference, 'days');
                 }
             }
+            console.log(event)
             const response = await axios.post('http://localhost:5000/todos', event);
             if(response.status === 201 && event.givenStart >= today.setHours(0,0,0,0)){
                 setEvents([...events, response.data])

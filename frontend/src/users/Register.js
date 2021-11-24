@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import validator from 'validator';
 import { useHistory } from 'react-router-dom';
 
-export default function FormPropsTextFields({ setLoggedIn }) {
+export default function FormPropsTextFields({ setLoggedIn, setUserID }) {
     let history = useHistory();
     const [user, setUser] = useState({
         firstName: "",
@@ -91,6 +91,8 @@ export default function FormPropsTextFields({ setLoggedIn }) {
            const response = await axios.post('http://127.0.0.1:5000/users', user);
            if (response.status === 201) {
             setLoggedIn(true)
+            setUserID(response.data.email)
+            sessionStorage.setItem('userID', JSON.stringify(response.data.email));
             sessionStorage.setItem('loggedIn', JSON.stringify(true));
             console.log("201");
            }

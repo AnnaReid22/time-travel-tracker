@@ -11,7 +11,7 @@ import { Redirect } from "react-router";
 const localizer = momentLocalizer(moment);
 let allViews = Object.keys(Views).map(k => Views[k])
 
-export default function MyCalendar({loggedIn}) {
+export default function MyCalendar({loggedIn, userID}) {
   const [events, setEvents]= useState([]);
   const [modalAdd, setModalAdd]= useState(false);
   const [modalEdit, setModalEdit]= useState(false);
@@ -20,7 +20,8 @@ export default function MyCalendar({loggedIn}) {
   useEffect(() => { 
     async function getEvents(){
       try {
-        const response = await axios.get('http://localhost:5000/todos');
+        console.log(userID)
+        const response = await axios.get('http://localhost:5000/todos', userID);
         if(response.status === 201){
         for(let i = 0; i < response.data.length; i++) {
           let resp = response.data[i]
@@ -39,7 +40,7 @@ export default function MyCalendar({loggedIn}) {
       }
      }
     getEvents();
-  }, []);
+  }, [userID]);
 
   function handleSelectedSlot(event) {
     setClickedEvent(event)
@@ -84,7 +85,9 @@ export default function MyCalendar({loggedIn}) {
         <AddEventModal clicked={clickedEvent} 
                   events={events} 
                   setEvents={setEvents} 
-                  setModal={setModalAdd} />
+                  setModal={setModalAdd}
+                  userID={userID}
+                   />
       </Dialog>
       <Dialog open={modalEdit} onClose={handleCloseEdit}>
         <EditEventModal clicked={clickedEvent} 
