@@ -23,7 +23,6 @@ export default function FormPropsTextFields({setLoggedIn, setUserID}) {
 function login(event) {
   findUser(user, setLoggedIn).then(function(result) {
   if(result === 200){
-    console.log(result)
     history.push('/todos')
   }
   else{

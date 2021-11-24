@@ -47,7 +47,6 @@ export default function FormPropsTextFields({ setLoggedIn, setUserID }) {
         });
         if (userValid.success)
             makePostCall(user).then(function(postStatus) {
-                console.log(postStatus)
                 if (postStatus === 201) {
                     history.push('/todos')
                 }
@@ -94,7 +93,6 @@ export default function FormPropsTextFields({ setLoggedIn, setUserID }) {
             setUserID(response.data.email)
             sessionStorage.setItem('userID', JSON.stringify(response.data.email));
             sessionStorage.setItem('loggedIn', JSON.stringify(true));
-            console.log("201");
            }
            return response.status;
         }

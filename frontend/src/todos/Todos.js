@@ -339,7 +339,7 @@ EnhancedTableToolbar.propTypes = {
   selectedItems: PropTypes.arrayOf(Object),
 };
 
-export default function EnhancedTable({loggedIn}) {
+export default function EnhancedTable({loggedIn, userID}) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('importance');
   //const [orderBy, setOrderBy] = React.useState('importance');
@@ -406,24 +406,25 @@ export default function EnhancedTable({loggedIn}) {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - events.length) : 0;
-    const getEventData = async () => {
-        try {
-            const data = await axios.get("http://localhost:5000/todos");
-            const rows = []
-            for(let i = 0; i < data.data.length; i++) {
-                let resp = data.data[i]
-                const date = moment(resp.end).format('L, h:mm a')
-                const importance = importanceSymbol[resp.importance]
-                rows.push(createData(resp.title, date, importance, resp._id, resp.category))
-            }
-            setEvent(rows);
-        }catch (e) {
-            console.log(e);
-        }
-        };
+
         React.useEffect(() => {
-            getEventData();
-        }, []);
+          const getEventData = async () => {
+            try {
+                const data = await axios.get("http://localhost:5000/todos/" + userID);
+                const rows = []
+                for(let i = 0; i < data.data.length; i++) {
+                    let resp = data.data[i]
+                    const date = moment(resp.end).format('L, h:mm a')
+                    const importance = importanceSymbol[resp.importance]
+                    rows.push(createData(resp.title, date, importance, resp._id, resp.category))
+                }
+                setEvent(rows);
+          }catch (e) {
+              console.log(e);
+          }
+          };
+          getEventData();
+        }, [userID]);
   if(!loggedIn){
     return <Redirect to="/login"></Redirect>
   }

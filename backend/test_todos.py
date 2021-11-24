@@ -11,7 +11,9 @@ todo = {
         "givenEnd":"2050-11-17T08:00:00.000Z",
         "category":"Other",
         "doNotPush":False,
-        "completed":False
+        "completed":False,
+        "display":True,
+        "user":"test@test.com"
     }
 todoEdit = {"importance":"!!"}
 todoRev = {"importance":"!"}
@@ -27,7 +29,9 @@ complete = {
         "givenEnd":"2050-11-26T08:00:00.000Z",
         "category":"Other",
         "doNotPush":False,
-        "completed":True
+        "completed":True,
+        "display":True,
+        "user":"test@test.com"
     }
 
 def test_find_all():  
@@ -35,9 +39,14 @@ def test_find_all():
     completeFound = complete in model_mongodb.Todo().find_all()
     assert completeFound and todoFound
 
+def test_find_all_by_user():  
+    todoFound = todo in model_mongodb.Todo().find_all_todos_by_user("test@test.com")
+    completeFound = complete in model_mongodb.Todo().find_all_todos_by_user("test@test.com")
+    assert completeFound and todoFound
+
 def test_find_completed():  
-    todoFound = todo in model_mongodb.Todo().find_completed()
-    completeFound = complete in model_mongodb.Todo().find_completed()
+    todoFound = todo in model_mongodb.Todo().find_completed_by_user("test@test.com")
+    completeFound = complete in model_mongodb.Todo().find_completed_by_user("test@test.com")
     assert completeFound and not todoFound
     
 def test_find_todo():  
@@ -61,12 +70,3 @@ def test_update_completed_undo():
  
 def test_update_completed_same():
         assert model_mongodb.Todo().update_completed("619570f60da5fd2cbb0d425b", True).modified_count == 0
-   
-
-    # def update_completed(self, id, bool):
-    #     return self.collection.update(
-    #         {"_id": ObjectId(id) },
-    #         { "$set":
-    #             {
-    #                 "completed": bool
-    #             }})

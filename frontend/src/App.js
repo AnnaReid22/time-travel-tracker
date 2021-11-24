@@ -43,7 +43,7 @@ function App() {
           <Users setLoggedIn={setLoggedIn} setUserID={setUserID}/>
         </Route>
         <Route path="/todos">
-          <Todos loggedIn={loggedIn}/>
+          <Todos loggedIn={loggedIn} userID={userID}/>
         </Route>
         <Route path="/settings">
           <Settings setLoggedIn={setLoggedIn} loggedIn={loggedIn} setUserID={setUserID}/>
@@ -58,7 +58,7 @@ function App() {
           <Finish loggedIn={loggedIn} userID={userID}/>
         </Route>
         <Route path="/completed">
-          <Complete loggedIn={loggedIn}/>
+          <Complete loggedIn={loggedIn} userID={userID}/>
         </Route>
       </BrowserRouter>
     </LocalizationProvider>

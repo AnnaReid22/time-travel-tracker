@@ -31,7 +31,6 @@ export default function AddEventModal ({clicked, events, setEvents, setModal, us
     };
 
     const handleChangeEndDate = (date) => {
-        console.log(date)
         setEndDate(date);
     };
 
@@ -63,19 +62,15 @@ export default function AddEventModal ({clicked, events, setEvents, setModal, us
         }
         try {
             if (!doNotPush) {
-                console.log(startDate)
                 var today = new Date();
                 event.start = moment(startDate).subtract(important, 'day');
-                console.log(event.start)
                 event.end = moment(endDate).subtract(important, 'day');
                 var difference = moment(event.end).diff(event.start, 'days');
                 if (event.start < today) {
                     event.start = new Date(today.setHours(0,0,0,0));
-                    console.log(event.start)
                     event.end = moment(event.start).add(difference, 'days');
                 }
             }
-            console.log(event)
             const response = await axios.post('http://localhost:5000/todos', event);
             if(response.status === 201 && event.givenStart >= today.setHours(0,0,0,0)){
                 setEvents([...events, response.data])

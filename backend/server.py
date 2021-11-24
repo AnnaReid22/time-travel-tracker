@@ -25,14 +25,17 @@ def register_user():
     else:
         newUser.save()
         return jsonify(newUser), 201
+
+
 @app.route('/login', methods=['POST'])
-def login():  
+def login(): 
     userToAdd = request.get_json()
     current_user = User(userToAdd)
     current_user.encryptPassword()
     if (current_user.user_exists()):
         return jsonify(current_user), 200
     return jsonify({"error": "User not found"}), 401
+
 
 #Todos API routes
 @app.route('/todos', methods=['POST', 'GET'])
@@ -45,10 +48,13 @@ def add_todo():
         newTodo.save()
         return jsonify(newTodo), 201
 
-@app.route('/todos/completed', methods=['GET'])
-def get_completed_Todo():
-    if request.method == 'GET':
-        return jsonify(Todo().find_completed()), 201
+@app.route('/todos/<user>', methods=['GET'])
+def get_all_todos_by_user(user):
+    return jsonify(Todo().find_all_todos_by_user(user)), 201
+
+@app.route('/todos/completed/<user>', methods=['GET'])
+def get_completed_todos_by_user(user):
+    return jsonify(Todo().find_completed_by_user(user)), 201
 
 @app.route('/todos/completed/<id>', methods=['PUT'])
 def completed_Todos(id):
@@ -60,6 +66,7 @@ def completed_Todos(id):
             return resp
         else:
            return jsonify({"error": "Todo not found"}), 404
+
 @app.route('/todos/<id>', methods=['GET', 'DELETE', 'PUT'])
 def get_todo(id):
     if request.method == 'GET':

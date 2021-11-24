@@ -20,8 +20,7 @@ export default function MyCalendar({loggedIn, userID}) {
   useEffect(() => { 
     async function getEvents(){
       try {
-        console.log(userID)
-        const response = await axios.get('http://localhost:5000/todos', userID);
+        const response = await axios.get('http://localhost:5000/todos/' + userID);
         if(response.status === 201){
         for(let i = 0; i < response.data.length; i++) {
           let resp = response.data[i]
@@ -56,11 +55,6 @@ export default function MyCalendar({loggedIn, userID}) {
     setModalEdit(true)
   }
 
-  function handleChangeView(event) {
-    console.log("this is a test")
-    console.log(event)
-  }
-
   function handleCloseEdit() {
     setModalEdit(false)
   }
@@ -76,7 +70,6 @@ export default function MyCalendar({loggedIn, userID}) {
         showMultiDayTimes
         localizer={localizer}
         views={allViews}
-        onView={(event) => handleChangeView(event)}
         style={{ height: "100vh" }}
         onSelectSlot={(event) => handleSelectedSlot(event)}
         onSelectEvent={(event) => handleSelectedEvent(event)}

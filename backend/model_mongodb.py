@@ -8,35 +8,9 @@ import hashlib
 from dotenv import load_dotenv
 
 class Model(dict):
-    """
-    A simple model that wraps mongodb document
-    """
     __getattr__ = dict.get
     __delattr__ = dict.__delitem__
     __setattr__ = dict.__setitem__
-
-    def save(self):
-        if not self._id:
-            self.collection.insert(self)
-        else:
-            self.collection.update(
-                { "_id": ObjectId(self._id) }, self)
-        self._id = str(self._id)
-
-    def reload(self):
-        if self._id:
-            result = self.collection.find_one({"_id": ObjectId(self._id)})
-            if result :
-                self.update(result)
-                self._id = str(self._id)
-                return True
-        return False
-
-    def remove(self):
-        if self._id:
-            resp = self.collection.remove({"_id": ObjectId(self._id)})
-            self.clear()
-            return resp
 
 class User(Model):
     load_dotenv()  # take environment variables from .env.
@@ -73,14 +47,20 @@ class Todo(Model):
             todo["_id"] = str(todo["_id"])
         return todos
 
-    def find_completed(self):
-        todos = list(self.collection.find({"completed" : True}))
+    def find_completed_by_user(self, user):
+        todos = list(self.collection.find({"completed" : True, "user": user}))
+        for todo in todos:
+            todo["_id"] = str(todo["_id"])
+        return todos
+
+    def find_all_todos_by_user(self, user):
+        todos = list(self.collection.find({ "user": user }))
         for todo in todos:
             todo["_id"] = str(todo["_id"])
         return todos
 
     def find_todos(self):
-        todos = list(self.collection.find({"completed" : False}))
+        todos = list(self.collection.find({ "completed" : False }))
         for todo in todos:
             todo["_id"] = str(todo["_id"])
         return todos
