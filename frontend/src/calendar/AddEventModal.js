@@ -58,7 +58,8 @@ export default function AddEventModal ({clicked, events, setEvents, setModal, us
             category: category,
             doNotPush: doNotPush,
             completed: false,
-            user: userID
+            user: userID,
+            display : true
         }
         try {
             if (!doNotPush) {

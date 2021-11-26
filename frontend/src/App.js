@@ -36,6 +36,7 @@ function getUserID() {
 function App() {
   const [loggedIn, setLoggedIn] = useState(getLoggedIn() ? true : false );
   const [userID, setUserID] = useState(getUserID());
+  //const [days, setDays] = useState(["empty"]);
   return (
     <LocalizationProvider dateAdapter={DateAdapter}>
       <BrowserRouter>
