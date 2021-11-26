@@ -24,6 +24,7 @@ function getLoggedIn() {
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(getLoggedIn() ? true : false );
+  //const [days, setDays] = useState(["empty"]);
   return (
     <LocalizationProvider dateAdapter={DateAdapter}>
       <BrowserRouter>

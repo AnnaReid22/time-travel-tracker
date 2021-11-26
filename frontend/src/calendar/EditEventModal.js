@@ -85,7 +85,8 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
             doNotPush: doNotPush,
             importChanged: importChanged,
             dateChanged: dateChanged,
-            completed: false
+            completed: false,
+            display: true
         }
         try {
             if (!doNotPush && (importChanged || dateChanged)) {

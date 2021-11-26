@@ -34,7 +34,7 @@ import { Redirect } from 'react-router';
 import moment from "moment";
 //TO REDIRECT TO CONFIRMATION PAGE OR OTHER PAGES 
 // it works sometimes... its a little odd 
- //  <Redirect to = "/confirmation"/>
+//  <Redirect to = "/confirmation"/>
 
 
 
@@ -47,7 +47,6 @@ function createData(task, duedate, importance, obId, category) {
     category
   };
 }
-
 
 
 
@@ -88,16 +87,16 @@ const BootstrapDialogTitle = (props) => {
         >
           <CloseIcon />
         </IconButton>
-        
+
       ) : null}
-        <Button
-          variant="outlined"
-          style={{ width: "300px", left: 25, top: -15}}
-          startIcon={<AddIcon />}
-        >
-          Apply 
-        </Button>
-      
+      <Button
+        variant="outlined"
+        style={{ width: "300px", left: 25, top: -15 }}
+        startIcon={<AddIcon />}
+      >
+        Apply
+      </Button>
+
     </DialogTitle>
   );
 };
@@ -160,7 +159,7 @@ const headCells = [
 const importanceSymbol = ["", "!", "", "!!", "", "!!!", "", "!!!!"]
 
 function EnhancedTableHead(props) {
-  const {order, orderBy, onRequestSort } =
+  const { order, orderBy, onRequestSort } =
     props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -170,33 +169,33 @@ function EnhancedTableHead(props) {
 
   return (
     <TableHead>
-    <TableRow>
+      <TableRow>
         <TableCell padding="checkbox">
         </TableCell>
         {headCells.map((headCell) => (
-            <TableCell
-                key={headCell.id}
-                align={headCell.numeric ? 'right' : 'left'}
-                padding={headCell.disablePadding ? 'none' : 'normal'}
-                sortDirection={orderBy === headCell.id ? order : false}
+          <TableCell
+            key={headCell.id}
+            align={headCell.numeric ? 'right' : 'left'}
+            padding={headCell.disablePadding ? 'none' : 'normal'}
+            sortDirection={orderBy === headCell.id ? order : false}
+          >
+            <TableSortLabel
+              active={orderBy === headCell.id}
+              direction={orderBy === headCell.id ? order : 'asc'}
+              onClick={createSortHandler(headCell.id)}
             >
-                <TableSortLabel
-                    active={orderBy === headCell.id}
-                    direction={orderBy === headCell.id ? order : 'asc'}
-                    onClick={createSortHandler(headCell.id)}
-                >
-                    {headCell.label}
-                    {orderBy === headCell.id ? (
-                        <Box component="span" sx={visuallyHidden}>
-                            {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                        </Box>
-                    ) : null}
-                </TableSortLabel>
-            </TableCell>
+              {headCell.label}
+              {orderBy === headCell.id ? (
+                <Box component="span" sx={visuallyHidden}>
+                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                </Box>
+              ) : null}
+            </TableSortLabel>
+          </TableCell>
         ))}
-    </TableRow>
-</TableHead>
-);
+      </TableRow>
+    </TableHead>
+  );
 }
 
 EnhancedTableHead.propTypes = {
@@ -209,8 +208,9 @@ EnhancedTableHead.propTypes = {
 };
 
 const EnhancedTableToolbar = (props) => {
-    
+
   const [open, setOpen] = React.useState(false);
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -219,13 +219,99 @@ const EnhancedTableToolbar = (props) => {
     setOpen(false);
   };
 
-  const history = useHistory();
+  async function fetchAll() {
+    try {
+      const response = await axios.get("http://localhost:5000/todos");
+      // console.log(response.data);
+      return response.data;
+    }
+    catch (error) {
+      //We're not handling errors. Just logging into the console.
+      console.log(error);
+      return false;
+    }
+  };
 
 
-  const handleRouteCom = () =>{ 
-    history.push("/completed");
+  // //ACTUAL ALL BUTTON ACTION
+  async function setAllDisplayToTrue(){
+    const data = await fetchAll()
+    console.log(data)
+
+    for(let i = 0; i < data.length; i++) {
+        const display = {
+            display: true
+        }
+        try {
+            const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+            console.log(response);
+        }
+        catch (error) {
+            console.log(error);
+            return false;
+        }
+    }
   }
 
+  async function setTodayDisplayToTrue() {
+    const data = await fetchAll()
+
+      var today = new Date();
+      today.setHours(0, 0);
+      const date = moment(today).format('L, h:mm a');
+    // 11/19/2021, 12:00 am
+
+      let todayYear =  date.substring(6, 10);
+      let todayMonth = date.substring(0, 2);
+      let todayDay = date.substring(3, 5);
+
+
+    for (let i = 0; i < data.length; i++) {
+      const eventDate = moment(data[i].end).format('L, h:mm a')
+
+      let year = eventDate.substring(6, 10);
+      let month = eventDate.substring(0, 2);
+      let day = eventDate.substring(3, 5);
+
+      const display = {
+        display: false
+      }
+      try {
+        if(year !== todayYear || month !== todayMonth || day !== todayDay){
+        const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+        console.log(response);
+        }
+      }
+      catch (error) {
+        console.log(error);
+        return false;
+      }
+    }
+  }
+
+  async function handleDayClick() {
+    const resp = await setTodayDisplayToTrue()
+    console.log(resp);
+    window.location.reload(false);
+  };
+
+
+
+  async function handleAllClick() {
+    const resp = await setAllDisplayToTrue()
+    console.log(resp);
+    window.location.reload(false);
+  };
+
+  const handleWeekClick = () => {
+
+  };
+
+  const history = useHistory();
+
+  const handleRouteCom = () => {
+    history.push("/completed");
+  }
 
   const { numSelected } = props;
   const { selectedItems } = props;
@@ -249,7 +335,7 @@ const EnhancedTableToolbar = (props) => {
           variant="subtitle1"
           component="div"
         >
-          {numSelected} selected 
+          {numSelected} selected
         </Typography>
       ) : (
         <Typography
@@ -260,77 +346,77 @@ const EnhancedTableToolbar = (props) => {
         >
           To Do List
 
-        <Button variant="outlined" style={{ height: '45px', width: '100px', top: 10, left: 65 }}>
-          <AddIcon/>
-       Add
-      </Button>
+          <Button variant="outlined" style={{ height: '45px', width: '100px', top: 10, left: 65 }}>
+            <AddIcon />
+            Add
+          </Button>
 
-        <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 70 }}>
-       All Tasks
-      </Button>
+          <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 70 }} onClick={handleAllClick}>
+            All Tasks
+          </Button>
 
-      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left:75 }}>
-       Today
-      </Button>
+          <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 75 }} onClick={handleDayClick}>
+            Today
+          </Button>
 
-      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 80 }}>
-       Week
-      </Button>
+          <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 80 }} onClick={handleWeekClick}>
+            Week
+          </Button>
 
-      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 85 }} onClick = {handleRouteCom}>
-       Completed 
-      </Button>
+          <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 85 }} onClick={handleRouteCom}>
+            Completed
+          </Button>
 
-      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 200}} onClick={handleClickOpen}>
-        <FilterListIcon />
-          Filter
-        </Button>
+          <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 190 }} onClick={handleClickOpen}>
+            <FilterListIcon />
+            Filter
+          </Button>
 
-        <BootstrapDialog
-          onClose={handleClose}
-          aria-labelledby="customized-dialog-title"
-          open={open}
-        >
-          <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-            Filter Events
-            <Filter />
-            
-          </BootstrapDialogTitle>
-        </BootstrapDialog>
+          <BootstrapDialog
+            onClose={handleClose}
+            aria-labelledby="customized-dialog-title"
+            open={open}
+          >
+            <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
+              Filter Events
+              <Filter />
+
+            </BootstrapDialogTitle>
+          </BootstrapDialog>
         </Typography>
-        
+
       )}
 
       {numSelected === 1 ? (
-          <AddToCompleteModal selectedItems = {selectedItems} />
-             
+        <AddToCompleteModal selectedItems={selectedItems} />
+
       ) : (
         <div>
-          
-      </div>
+
+        </div>
       )}
 
-{numSelected >= 2 ? (
-               < Typography
-               sx={{ flex: '1 1 100%' }}
-               align = "right"
-               variant="h6"
-               id="tableTitle"
-               component="div"
-             >
-               Please select one event
-              </Typography>
+      {numSelected >= 2 ? (
+        < Typography
+          sx={{ flex: '1 1 100%' }}
+          align="right"
+          variant="h6"
+          id="tableTitle"
+          component="div"
+        >
+          Please select one event
+        </Typography>
       ) : (
         <div>
-      </div>
+        </div>
       )}
 
 
-      
+
 
     </Toolbar>
 
-    
+
   );
 };
 
@@ -339,7 +425,7 @@ EnhancedTableToolbar.propTypes = {
   selectedItems: PropTypes.arrayOf(Object),
 };
 
-export default function EnhancedTable({loggedIn}) {
+export default function EnhancedTable({ loggedIn }) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('importance');
   //const [orderBy, setOrderBy] = React.useState('importance');
@@ -348,7 +434,6 @@ export default function EnhancedTable({loggedIn}) {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [events, setEvent] = useState([]);
-
 
 
   const handleRequestSort = (event, property) => {
@@ -406,25 +491,30 @@ export default function EnhancedTable({loggedIn}) {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - events.length) : 0;
-    const getEventData = async () => {
-        try {
-            const data = await axios.get("http://localhost:5000/todos");
-            const rows = []
-            for(let i = 0; i < data.data.length; i++) {
-                let resp = data.data[i]
-                const date = moment(resp.end).format('L, h:mm a')
-                const importance = importanceSymbol[resp.importance]
-                rows.push(createData(resp.title, date, importance, resp._id, resp.category))
-            }
-            setEvent(rows);
-        }catch (e) {
-            console.log(e);
-        }
-        };
-        React.useEffect(() => {
-            getEventData();
-        }, []);
-  if(!loggedIn){
+  const getEventData = async () => {
+    try {
+      const data = await axios.get("http://localhost:5000/todos");
+      const rows = []
+      for (let i = 0; i < data.data.length; i++) {
+        let resp = data.data[i]
+
+        const date = moment(resp.end).format('L, h:mm a')
+        //SHOW THEM THIS
+        // console.log(resp.end)
+        // console.log(date)
+        const importance = importanceSymbol[resp.importance]
+        if (resp.display === true)
+          rows.push(createData(resp.title, date, importance, resp._id, resp.category))
+      }
+      setEvent(rows);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  React.useEffect(() => {
+    getEventData();
+  }, []);
+  if (!loggedIn) {
     return <Redirect to="/login"></Redirect>
   }
   return (

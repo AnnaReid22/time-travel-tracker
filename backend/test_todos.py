@@ -11,7 +11,8 @@ todo = {
         "givenEnd":"2050-11-17T08:00:00.000Z",
         "category":"Other",
         "doNotPush":False,
-        "completed":False
+        "completed":False,
+        "display": True
     }
 todoEdit = {"importance":"!!"}
 todoRev = {"importance":"!"}
@@ -27,7 +28,8 @@ complete = {
         "givenEnd":"2050-11-26T08:00:00.000Z",
         "category":"Other",
         "doNotPush":False,
-        "completed":True
+        "completed":True,
+        "display" : True
     }
 
 def test_find_all():  

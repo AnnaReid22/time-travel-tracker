@@ -91,6 +91,12 @@ class Todo(Model):
             { "$set":{"completed": bool}},
             upsert=False)
 
+    def update_display(self, id, bool):
+        return self.collection.update_one(
+            {"_id": ObjectId(id) },
+            { "$set":{"display": bool}},
+            upsert=False)
+
     def update_one(self, id, replacement):
         return self.collection.update_one(
             { "_id": ObjectId(id) }, 
