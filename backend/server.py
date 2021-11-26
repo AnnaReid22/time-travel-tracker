@@ -9,18 +9,31 @@ from flask_cors import CORS, cross_origin
 from model_mongodb import User
 from model_mongodb import Todo
 
-app = Flask(__name__, static_folder='./build', static_url_path='/')
-CORS(app)
+app = Flask(__name__, static_folder='build/', static_url_path='/')
+app.debug = 'DEBUG' in os.environ
+
 
 @app.route('/')
-@cross_origin
 def index():
     return app.send_static_file('index.html')
 
 
-@app.errorhandler(404)
-def not_found(e):
-    return app.send_static_file('index.html')
+@app.route('/<path:path>')
+def static_file(path):
+    return app.send_static_file(path)
+
+# app = Flask(__name__, static_folder='./build', static_url_path='/')
+# CORS(app)
+
+# @app.route('/')
+# @cross_origin
+# def index():
+#     return app.send_static_file('index.html')
+
+
+# @app.errorhandler(404)
+# def not_found(e):
+#     return app.send_static_file('index.html')
 
 #login API routes
 @app.route('/users', methods=['POST'])
