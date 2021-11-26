@@ -145,16 +145,16 @@ const headCells = [
     disablePadding: false,
     label: 'Importance',
   },
-  {
-    id: 'id',
-    numeric: true,
-    disablePadding: false,
-  },
-  {
-    id: 'category',
-    numeric: true,
-    disablePadding: false,
-  },
+  // {
+  //   id: 'id',
+  //   numeric: true,
+  //   disablePadding: false,
+  // },
+  // {
+  //   id: 'category',
+  //   numeric: true,
+  //   disablePadding: false,
+  // },
 ];
 const importanceSymbol = ["", "!", "", "!!", "", "!!!", "", "!!!!"]
 
@@ -234,36 +234,37 @@ const EnhancedTableToolbar = (props) => {
 
 
   // //ACTUAL ALL BUTTON ACTION
-  async function setAllDisplayToTrue(){
+  async function setAllDisplayToTrue() {
     const data = await fetchAll()
-    console.log(data)
+    //console.log(data)
 
-    for(let i = 0; i < data.length; i++) {
-        const display = {
-            display: true
-        }
-        try {
-            const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
-            console.log(response);
-        }
-        catch (error) {
-            console.log(error);
-            return false;
-        }
+    for (let i = 0; i < data.length; i++) {
+      const display = {
+        display: true
+      }
+      try {
+        const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+        //console.log(response);
+        return response.data;
+      }
+      catch (error) {
+        console.log(error);
+        return false;
+      }
     }
   }
 
   async function setTodayDisplayToTrue() {
     const data = await fetchAll()
 
-      var today = new Date();
-      today.setHours(0, 0);
-      const date = moment(today).format('L, h:mm a');
+    var today = new Date();
+    today.setHours(0, 0);
+    const date = moment(today).format('L, h:mm a');
     // 11/19/2021, 12:00 am
 
-      let todayYear =  date.substring(6, 10);
-      let todayMonth = date.substring(0, 2);
-      let todayDay = date.substring(3, 5);
+    let todayYear = date.substring(6, 10);
+    let todayMonth = date.substring(0, 2);
+    let todayDay = date.substring(3, 5);
 
 
     for (let i = 0; i < data.length; i++) {
@@ -277,9 +278,9 @@ const EnhancedTableToolbar = (props) => {
         display: false
       }
       try {
-        if(year !== todayYear || month !== todayMonth || day !== todayDay){
-        const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
-        console.log(response);
+        if (year !== todayYear || month !== todayMonth || day !== todayDay) {
+          const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+          return response.data;
         }
       }
       catch (error) {
@@ -289,6 +290,95 @@ const EnhancedTableToolbar = (props) => {
     }
   }
 
+
+  async function setWeekDisplayToTrue() {
+    const data = await fetchAll()
+
+    var curr = new Date();
+    var firstday = new Date(curr.setDate(curr.getDate() - curr.getDay()));
+    var lastday = new Date(curr.setDate(curr.getDate() - curr.getDay() + 6));
+    firstday.setHours(0, 0, 0, 0);
+    lastday.setHours(23, 59, 0, 0);
+
+    //so the event date needs to be between the firstday.getTime() and lastday.getTime()
+
+    for (let i = 0; i < data.length; i++) {
+      //End date is not a date so you need to make it into one :/
+      const eventDate = moment(data[i].end).format('L, h:mm a')
+
+      let year = parseInt(eventDate.substring(6, 10));
+      let month = parseInt(eventDate.substring(0, 2)) - 1;// months are 0 -11
+      let day = parseInt(eventDate.substring(3, 5));
+
+      //grab time 
+      let amOrpm;
+      if (eventDate.includes("am")) {
+        amOrpm = "AM";
+      }
+      else {
+        amOrpm = "PM";
+      }
+
+      let time = eventDate.substring(12, 17);
+      //get rid of spaces at the end cause some times only have 3 numbers (ex. 1:15 vs 12:15)
+      time = time.trim();
+      //add zero in front, in case there is only 3 numbers, makes it easier to parse  
+      if (time.length === 4) {
+        time = "0" + time;
+      }
+
+      // parse time to get hour and minutes 
+      let hour = time.substring(0, 2);
+      if (hour[0] === "0") {
+        hour = time.substring(1, 2);
+      }
+      let min = time.substring(3, 5);
+
+
+      //covert to int
+      let intHour = parseInt(hour);
+      let intMin = parseInt(min);
+      let militaryHour = 0;
+
+      //convert to military time (just the hour)
+      if (amOrpm === "PM") {
+        if (hour === 12) {
+          militaryHour = 12;
+        }
+        else {
+          militaryHour = intHour + 12;
+        }
+
+      }
+      else {
+        if (hour === 12) {
+          militaryHour = 0;
+        }
+        else {
+          militaryHour = intHour;
+        }
+      }
+
+
+      var actual = new Date(year, month, day, militaryHour, intMin, 0, 0);
+
+      const display = {
+        display: false
+      }
+      try {
+
+        if (actual.getTime() < firstday.getTime() || actual.getTime() > lastday.getTime()) {
+          const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+          console.log(response);
+          return response;
+        }
+      }
+      catch (error) {
+        console.log(error);
+        return false;
+      }
+    }
+  }
   async function handleDayClick() {
     const resp = await setTodayDisplayToTrue()
     console.log(resp);
@@ -303,8 +393,10 @@ const EnhancedTableToolbar = (props) => {
     window.location.reload(false);
   };
 
-  const handleWeekClick = () => {
-
+  async function handleWeekClick() {
+    const resp = await setWeekDisplayToTrue()
+    console.log(resp);
+    window.location.reload(false);
   };
 
   const history = useHistory();

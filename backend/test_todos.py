@@ -12,7 +12,8 @@ todo = {
         "category":"Other",
         "doNotPush":False,
         "completed":False,
-        "display": True
+        "display": True,
+        "user":"test@test.com"
     }
 todoEdit = {"importance":"!!"}
 todoRev = {"importance":"!"}
@@ -29,7 +30,8 @@ complete = {
         "category":"Other",
         "doNotPush":False,
         "completed":True,
-        "display" : True
+        "display" : True,
+        "user":"test@test.com"
     }
 
 def test_find_all():  
