@@ -216,7 +216,7 @@ const EnhancedTableToolbar = (props) => {
 
   async function fetchAll() {
     try {
-     await axios.get("http://localhost:5000/todos");
+     const response = await axios.get("http://localhost:5000/todos");
       // console.log(response.data);
       return response.data;
     }
