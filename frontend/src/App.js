@@ -22,32 +22,44 @@ function getLoggedIn() {
   }
 }
 
+function getUserID() {
+  const tokenString = sessionStorage.getItem('userID');
+  const userToken = JSON.parse(tokenString);
+  if(userToken){
+    return userToken
+  }
+  else{
+    return ""
+  }
+}
+
 function App() {
   const [loggedIn, setLoggedIn] = useState(getLoggedIn() ? true : false );
+  const [userID, setUserID] = useState(getUserID());
   //const [days, setDays] = useState(["empty"]);
   return (
     <LocalizationProvider dateAdapter={DateAdapter}>
       <BrowserRouter>
         <Route path="/login" >
-          <Users setLoggedIn={setLoggedIn}/>
+          <Users setLoggedIn={setLoggedIn} setUserID={setUserID}/>
         </Route>
         <Route path="/todos">
-          <Todos loggedIn={loggedIn}/>
+          <Todos loggedIn={loggedIn} userID={userID}/>
         </Route>
         <Route path="/settings">
-          <Settings setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
+          <Settings setLoggedIn={setLoggedIn} loggedIn={loggedIn} setUserID={setUserID}/>
         </Route>
         <Route path="/register">
-          <Register setLoggedIn={setLoggedIn}/>
+          <Register setLoggedIn={setLoggedIn} setUserID={setUserID}/>
         </Route>
         <Route path="/calendar">
-          <Calendar loggedIn={loggedIn}/>
+          <Calendar loggedIn={loggedIn} userID={userID}/>
         </Route>
         <Route path="/finish">
-          <Finish loggedIn={loggedIn}/>
+          <Finish loggedIn={loggedIn} userID={userID}/>
         </Route>
         <Route path="/completed">
-          <Complete loggedIn={loggedIn}/>
+          <Complete loggedIn={loggedIn} userID={userID}/>
         </Route>
       </BrowserRouter>
     </LocalizationProvider>

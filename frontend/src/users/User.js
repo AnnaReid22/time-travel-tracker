@@ -7,7 +7,7 @@ import LoginIcon from "@mui/icons-material/Login";
 import { useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
-export default function FormPropsTextFields({setLoggedIn}) {
+export default function FormPropsTextFields({setLoggedIn, setUserID}) {
   let history = useHistory();
   const [user, getUser] = useState({
     email: "",
@@ -23,7 +23,6 @@ export default function FormPropsTextFields({setLoggedIn}) {
 function login(event) {
   findUser(user, setLoggedIn).then(function(result) {
   if(result === 200){
-    console.log(result)
     history.push('/todos')
   }
   else{
@@ -39,6 +38,8 @@ async function findUser(user, setLoggedIn){
      const response = await axios.post('http://127.0.0.1:5000/login', user);
      if (response.status === 200) {
        setLoggedIn(true)
+       setUserID(response.data.email)
+       sessionStorage.setItem('userID', JSON.stringify(response.data.email));
        sessionStorage.setItem('loggedIn', JSON.stringify(true));
        return 200
      }
