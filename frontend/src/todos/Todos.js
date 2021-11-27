@@ -89,13 +89,7 @@ const BootstrapDialogTitle = (props) => {
         </IconButton>
 
       ) : null}
-      <Button
-        variant="outlined"
-        style={{ width: "300px", left: 25, top: -15 }}
-        startIcon={<AddIcon />}
-      >
-        Apply
-      </Button>
+    
 
     </DialogTitle>
   );
@@ -150,11 +144,12 @@ const headCells = [
   //   numeric: true,
   //   disablePadding: false,
   // },
-  // {
-  //   id: 'category',
-  //   numeric: true,
-  //   disablePadding: false,
-  // },
+  {
+    id: 'category',
+    numeric: true,
+    disablePadding: false,
+    label: "Category"
+  },
 ];
 const importanceSymbol = ["", "!", "", "!!", "", "!!!", "", "!!!!"]
 
@@ -277,10 +272,15 @@ const EnhancedTableToolbar = (props) => {
       const display = {
         display: false
       }
+      const displayT = {
+        display: true
+      }
       try {
         if (year !== todayYear || month !== todayMonth || day !== todayDay) {
           const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
-          return response.data;
+        }
+        else{
+          const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, displayT);
         }
       }
       catch (error) {
@@ -365,12 +365,16 @@ const EnhancedTableToolbar = (props) => {
       const display = {
         display: false
       }
+      const displayT = {
+        display: true
+      }
       try {
 
         if (actual.getTime() < firstday.getTime() || actual.getTime() > lastday.getTime()) {
           const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
-          console.log(response);
-          return response;
+        }
+        else{
+        const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, displayT);
         }
       }
       catch (error) {
@@ -661,6 +665,7 @@ export default function EnhancedTable({loggedIn, userID}) {
                       </TableCell>
                       <TableCell align="right">{row.duedate}</TableCell>
                       <TableCell align="right">{row.importance}</TableCell>
+                      <TableCell align="right">{row.category}</TableCell>
                     </TableRow>
                   );
                 })}

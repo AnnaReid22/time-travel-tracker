@@ -9,6 +9,7 @@ import Select from '@mui/material/Select';
 import Chip from '@mui/material/Chip';
 import { Button } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
+import axios from 'axios';
 
 
 const ITEM_HEIGHT = 48;
@@ -21,6 +22,8 @@ const MenuProps = {
     },
   },
 };
+
+const importanceSymbol = ["", "!", "", "!!", "", "!!!", "", "!!!!"]
 
 
 const filters = [
@@ -51,6 +54,54 @@ const handleClear = (event)=>{
   setFilter(
     []
   )
+}
+
+async function fetchAll() {
+  try {
+    const response = await axios.get("http://localhost:5000/todos");
+    // console.log(response.data);
+    return response.data;
+  }
+  catch (error) {
+    //We're not handling errors. Just logging into the console.
+    console.log(error);
+    return false;
+  }
+};
+
+
+  // //ACTUAL ALL BUTTON ACTION
+  async function applyFilters() {
+    const data = await fetchAll()
+    //console.log(data)
+
+    for (let i = 0; i < data.length; i++) {
+      const display = {
+        display: false
+      }
+      for (let i = 0; i < data.length; i++) {
+        const displayT = {
+          display: true
+        }
+
+      try {
+        const importance = importanceSymbol[data[i].importance]
+        if(!filters.includes(importance) || !filters.includes(data[i].category)){
+        const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+        //console.log(response);
+        return response.data;
+        }
+        else{
+          const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+        }
+      }
+      catch (error) {
+        console.log(error);
+        return false;
+      }
+    }
+  }
+  window.location.reload(false);
 }
   const handleChange = (event) => {
     const {
@@ -93,21 +144,26 @@ const handleClear = (event)=>{
             </MenuItem>
           ))}
         </Select>
-        { <Button onClick = {handleClear}
+       
+        {
+          <div class="btn-group">
+          <Button onClick = {handleClear}
           variant="outlined"
           style={{ width: "300px", top:5 }}
           startIcon={< ClearIcon/>}
         >
           Clear 
         </Button>
-        /*
-        <Button onClick={handleClose}
+        
+        <Button onClick = {applyFilters}
           variant="outlined"
           style={{ width: "300px", top: 10}}
-          startIcon={<AddIcon />}
+         
         >
           Apply 
-        </Button> */}
+        </Button> 
+        </div>
+      }
         
       </FormControl>
      
