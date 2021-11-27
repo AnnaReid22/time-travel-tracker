@@ -216,7 +216,7 @@ const EnhancedTableToolbar = (props) => {
 
   async function fetchAll() {
     try {
-      const response = await axios.get("http://localhost:5000/todos");
+     await axios.get("http://localhost:5000/todos");
       // console.log(response.data);
       return response.data;
     }
@@ -238,7 +238,7 @@ const EnhancedTableToolbar = (props) => {
         display: true
       }
       try {
-        const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+       await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
         //console.log(response);
         //return response.data;
       }
@@ -277,11 +277,11 @@ const EnhancedTableToolbar = (props) => {
       }
       try {
         if (year !== todayYear || month !== todayMonth || day !== todayDay) {
-          const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+         await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
           //return response.data;
         }
         else{
-          const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, displayT);
+         await axios.put('http://localhost:5000/todos/id/' + data[i]._id, displayT);
         }
       }
       catch (error) {
@@ -372,12 +372,12 @@ const EnhancedTableToolbar = (props) => {
       try {
 
         if (actual.getTime() < firstday.getTime() || actual.getTime() > lastday.getTime()) {
-          const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
-          console.log(response);
+          await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+         // console.log(response);
           //return response;
         }
         else{
-          const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, displayT);
+          await axios.put('http://localhost:5000/todos/id/' + data[i]._id, displayT);
         }
       }
       catch (error) {
