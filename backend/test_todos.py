@@ -12,7 +12,7 @@ todo = {
         "category":"Other",
         "doNotPush":False,
         "completed":False,
-        "display":True,
+        "display":False,
         "user":"test@test.com"
     }
 todoEdit = {"importance":"!!"}
