@@ -2,6 +2,7 @@ attrs==21.2.0
 certifi==2021.10.8
 charset-normalizer==2.0.7
 click==8.0.3
+coverage==6.1.2
 dnspython==2.1.0
 Flask==2.0.2
 Flask-Cors==3.0.10
