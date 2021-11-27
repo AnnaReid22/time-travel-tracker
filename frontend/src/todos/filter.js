@@ -29,10 +29,11 @@ const importanceSymbol = ["", "!", "", "!!", "", "!!!", "", "!!!!"]
 const filters = [
 'School',
 'Work', 
-'Personal',
+'Other',
 '!', 
 '!!',
 '!!!',
+'!!!!'
 
 ];
 
@@ -69,37 +70,33 @@ async function fetchAll() {
   }
 };
 
-
   // //ACTUAL ALL BUTTON ACTION
   async function applyFilters() {
     const data = await fetchAll()
-    //console.log(data)
+    console.log(filter);
 
     for (let i = 0; i < data.length; i++) {
+      console.log("checking");
       const display = {
-        display: false
+        display: true
       }
-      for (let i = 0; i < data.length; i++) {
-        const displayT = {
-          display: true
+        const displayF = {
+          display: false
         }
 
       try {
         const importance = importanceSymbol[data[i].importance]
-        if(!filters.includes(importance) || !filters.includes(data[i].category)){
+        if(filter.includes(importance) || filter.includes(data[i].category)){
         const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
-        //console.log(response);
-        return response.data;
         }
         else{
-          const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+          const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, displayF);
         }
       }
       catch (error) {
         console.log(error);
         return false;
       }
-    }
   }
   window.location.reload(false);
 }
@@ -154,11 +151,9 @@ async function fetchAll() {
         >
           Clear 
         </Button>
-        
         <Button onClick = {applyFilters}
           variant="outlined"
-          style={{ width: "300px", top: 10}}
-         
+          style={{ width: "300px", top: 10}} 
         >
           Apply 
         </Button> 
