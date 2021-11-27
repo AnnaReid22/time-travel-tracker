@@ -65,8 +65,6 @@ const handleClear = (event)=>{
       // On autofill we get a the stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );
-
-    console.log(filter);
   };
 
   return (
