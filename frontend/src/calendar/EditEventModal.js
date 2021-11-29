@@ -85,16 +85,15 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
             doNotPush: doNotPush,
             importChanged: importChanged,
             dateChanged: dateChanged,
-            completed: false
+            completed: false,
+            display: true
         }
         try {
             if (!doNotPush && (importChanged || dateChanged)) {
                 event.start = moment(givenStart).subtract(important, 'day');
                 event.end = moment(givenEnd).subtract(important, 'day');
                 var difference = moment(event.end).diff(event.start, 'hours')
-                console.log(difference)
                 var today = new Date();
-                console.log(today)
                 if (event.start < today) {
                     event.start = today.setHours(0,0,0,0);
                     event.end = moment(event.start).add(difference, 'hours');

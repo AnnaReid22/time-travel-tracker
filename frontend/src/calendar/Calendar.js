@@ -11,7 +11,7 @@ import { Redirect } from "react-router";
 const localizer = momentLocalizer(moment);
 let allViews = Object.keys(Views).map(k => Views[k])
 
-export default function MyCalendar({loggedIn}) {
+export default function MyCalendar({loggedIn, userID}) {
   const [events, setEvents]= useState([]);
   const [modalAdd, setModalAdd]= useState(false);
   const [modalEdit, setModalEdit]= useState(false);
@@ -20,7 +20,7 @@ export default function MyCalendar({loggedIn}) {
   useEffect(() => { 
     async function getEvents(){
       try {
-        const response = await axios.get('http://localhost:5000/todos');
+        const response = await axios.get('http://localhost:5000/todos/' + userID);
         if(response.status === 201){
         for(let i = 0; i < response.data.length; i++) {
           let resp = response.data[i]
@@ -39,7 +39,7 @@ export default function MyCalendar({loggedIn}) {
       }
      }
     getEvents();
-  }, []);
+  }, [userID]);
 
   function handleSelectedSlot(event) {
     setClickedEvent(event)
@@ -53,11 +53,6 @@ export default function MyCalendar({loggedIn}) {
   function handleSelectedEvent(event) {
     setClickedEvent(event)
     setModalEdit(true)
-  }
-
-  function handleChangeView(event) {
-    console.log("this is a test")
-    console.log(event)
   }
 
   function handleCloseEdit() {
@@ -75,7 +70,6 @@ export default function MyCalendar({loggedIn}) {
         showMultiDayTimes
         localizer={localizer}
         views={allViews}
-        onView={(event) => handleChangeView(event)}
         style={{ height: "100vh" }}
         onSelectSlot={(event) => handleSelectedSlot(event)}
         onSelectEvent={(event) => handleSelectedEvent(event)}
@@ -84,7 +78,9 @@ export default function MyCalendar({loggedIn}) {
         <AddEventModal clicked={clickedEvent} 
                   events={events} 
                   setEvents={setEvents} 
-                  setModal={setModalAdd} />
+                  setModal={setModalAdd}
+                  userID={userID}
+                   />
       </Dialog>
       <Dialog open={modalEdit} onClose={handleCloseEdit}>
         <EditEventModal clicked={clickedEvent} 

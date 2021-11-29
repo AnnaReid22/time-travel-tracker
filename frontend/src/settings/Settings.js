@@ -10,6 +10,7 @@ export default function IconLabelButtons({loggedIn, setLoggedIn}) {
   function handleLogout(){
     setLoggedIn(false)
     sessionStorage.removeItem('loggedIn');
+    sessionStorage.removeItem('userID');
   }
 
   if(!loggedIn){

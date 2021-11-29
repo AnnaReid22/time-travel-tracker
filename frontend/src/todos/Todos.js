@@ -34,7 +34,7 @@ import { Redirect } from 'react-router';
 import moment from "moment";
 //TO REDIRECT TO CONFIRMATION PAGE OR OTHER PAGES 
 // it works sometimes... its a little odd 
- //  <Redirect to = "/confirmation"/>
+//  <Redirect to = "/confirmation"/>
 
 
 
@@ -50,7 +50,6 @@ function createData(task, duedate, importance, obId, category) {
 
 
 
-
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -61,7 +60,7 @@ function descendingComparator(a, b, orderBy) {
   return 0;
 }
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+const BootstrapDialog = styled(Dialog)(({ theme, userID }) => ({
   '& .MuiDialogContent-root': {
     padding: theme.spacing(2),
   },
@@ -88,16 +87,10 @@ const BootstrapDialogTitle = (props) => {
         >
           <CloseIcon />
         </IconButton>
-        
+
       ) : null}
-        <Button
-          variant="outlined"
-          style={{ width: "300px", left: 25, top: -15}}
-          startIcon={<AddIcon />}
-        >
-          Apply 
-        </Button>
-      
+     
+
     </DialogTitle>
   );
 };
@@ -146,21 +139,22 @@ const headCells = [
     disablePadding: false,
     label: 'Importance',
   },
-  {
-    id: 'id',
-    numeric: true,
-    disablePadding: false,
-  },
-  {
+  // {
+  //   id: 'id',
+  //   numeric: true,
+  //   disablePadding: false,
+  // },
+   {
     id: 'category',
     numeric: true,
     disablePadding: false,
+    label : 'category',
   },
 ];
 const importanceSymbol = ["", "!", "", "!!", "", "!!!", "", "!!!!"]
 
 function EnhancedTableHead(props) {
-  const {order, orderBy, onRequestSort } =
+  const { order, orderBy, onRequestSort } =
     props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -170,33 +164,33 @@ function EnhancedTableHead(props) {
 
   return (
     <TableHead>
-    <TableRow>
+      <TableRow>
         <TableCell padding="checkbox">
         </TableCell>
         {headCells.map((headCell) => (
-            <TableCell
-                key={headCell.id}
-                align={headCell.numeric ? 'right' : 'left'}
-                padding={headCell.disablePadding ? 'none' : 'normal'}
-                sortDirection={orderBy === headCell.id ? order : false}
+          <TableCell
+            key={headCell.id}
+            align={headCell.numeric ? 'right' : 'left'}
+            padding={headCell.disablePadding ? 'none' : 'normal'}
+            sortDirection={orderBy === headCell.id ? order : false}
+          >
+            <TableSortLabel
+              active={orderBy === headCell.id}
+              direction={orderBy === headCell.id ? order : 'asc'}
+              onClick={createSortHandler(headCell.id)}
             >
-                <TableSortLabel
-                    active={orderBy === headCell.id}
-                    direction={orderBy === headCell.id ? order : 'asc'}
-                    onClick={createSortHandler(headCell.id)}
-                >
-                    {headCell.label}
-                    {orderBy === headCell.id ? (
-                        <Box component="span" sx={visuallyHidden}>
-                            {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                        </Box>
-                    ) : null}
-                </TableSortLabel>
-            </TableCell>
+              {headCell.label}
+              {orderBy === headCell.id ? (
+                <Box component="span" sx={visuallyHidden}>
+                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                </Box>
+              ) : null}
+            </TableSortLabel>
+          </TableCell>
         ))}
-    </TableRow>
-</TableHead>
-);
+      </TableRow>
+    </TableHead>
+  );
 }
 
 EnhancedTableHead.propTypes = {
@@ -209,8 +203,9 @@ EnhancedTableHead.propTypes = {
 };
 
 const EnhancedTableToolbar = (props) => {
-    
+
   const [open, setOpen] = React.useState(false);
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -219,13 +214,203 @@ const EnhancedTableToolbar = (props) => {
     setOpen(false);
   };
 
-  const history = useHistory();
+  async function fetchAll() {
+    try {
+     const response = await axios.get("http://localhost:5000/todos/" + props.userID);
+      // console.log(response.data);
+      return response.data;
+    }
+    catch (error) {
+      //We're not handling errors. Just logging into the console.
+      console.log(error);
+      return false;
+    }
+  };
 
 
-  const handleRouteCom = () =>{ 
-    history.push("/completed");
+  // //ACTUAL ALL BUTTON ACTION
+  async function setAllDisplayToTrue() {
+    const data = await fetchAll()
+    //console.log(data)
+
+    for (let i = 0; i < data.length; i++) {
+      const display = {
+        display: true
+      }
+      try {
+       await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+        //console.log(response);
+        //return response.data;
+      }
+      catch (error) {
+        console.log(error);
+        return false;
+      }
+    }
   }
 
+  async function setTodayDisplayToTrue() {
+    const data = await fetchAll()
+
+    var today = new Date();
+    today.setHours(0, 0);
+    const date = moment(today).format('L, h:mm a');
+    // 11/19/2021, 12:00 am
+
+    let todayYear = date.substring(6, 10);
+    let todayMonth = date.substring(0, 2);
+    let todayDay = date.substring(3, 5);
+
+
+    for (let i = 0; i < data.length; i++) {
+      const eventDate = moment(data[i].end).format('L, h:mm a')
+
+      let year = eventDate.substring(6, 10);
+      let month = eventDate.substring(0, 2);
+      let day = eventDate.substring(3, 5);
+
+      const display = {
+        display: false
+      }
+      const displayT = {
+        display: true
+      }
+      try {
+        if (year !== todayYear || month !== todayMonth || day !== todayDay) {
+         await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+          //return response.data;
+        }
+        else{
+         await axios.put('http://localhost:5000/todos/id/' + data[i]._id, displayT);
+        }
+      }
+      catch (error) {
+        console.log(error);
+        return false;
+      }
+    }
+  }
+
+
+  async function setWeekDisplayToTrue() {
+    const data = await fetchAll()
+
+    var curr = new Date();
+    var firstday = new Date(curr.setDate(curr.getDate() - curr.getDay()));
+    var lastday = new Date(curr.setDate(curr.getDate() - curr.getDay() + 6));
+    firstday.setHours(0, 0, 0, 0);
+    lastday.setHours(23, 59, 0, 0);
+
+    //so the event date needs to be between the firstday.getTime() and lastday.getTime()
+
+    for (let i = 0; i < data.length; i++) {
+      //End date is not a date so you need to make it into one :/
+      const eventDate = moment(data[i].end).format('L, h:mm a')
+
+      let year = parseInt(eventDate.substring(6, 10));
+      let month = parseInt(eventDate.substring(0, 2)) - 1;// months are 0 -11
+      let day = parseInt(eventDate.substring(3, 5));
+
+      //grab time 
+      let amOrpm;
+      if (eventDate.includes("am")) {
+        amOrpm = "AM";
+      }
+      else {
+        amOrpm = "PM";
+      }
+
+      let time = eventDate.substring(12, 17);
+      //get rid of spaces at the end cause some times only have 3 numbers (ex. 1:15 vs 12:15)
+      time = time.trim();
+      //add zero in front, in case there is only 3 numbers, makes it easier to parse  
+      if (time.length === 4) {
+        time = "0" + time;
+      }
+
+      // parse time to get hour and minutes 
+      let hour = time.substring(0, 2);
+      if (hour[0] === "0") {
+        hour = time.substring(1, 2);
+      }
+      let min = time.substring(3, 5);
+
+
+      //covert to int
+      let intHour = parseInt(hour);
+      let intMin = parseInt(min);
+      let militaryHour = 0;
+
+      //convert to military time (just the hour)
+      if (amOrpm === "PM") {
+        if (hour === 12) {
+          militaryHour = 12;
+        }
+        else {
+          militaryHour = intHour + 12;
+        }
+
+      }
+      else {
+        if (hour === 12) {
+          militaryHour = 0;
+        }
+        else {
+          militaryHour = intHour;
+        }
+      }
+
+
+      var actual = new Date(year, month, day, militaryHour, intMin, 0, 0);
+
+      const display = {
+        display: false
+      }
+      const displayT = {
+        display: true
+      }
+      try {
+
+        if (actual.getTime() < firstday.getTime() || actual.getTime() > lastday.getTime()) {
+          await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+         // console.log(response);
+          //return response;
+        }
+        else{
+          await axios.put('http://localhost:5000/todos/id/' + data[i]._id, displayT);
+        }
+      }
+      catch (error) {
+        console.log(error);
+        return false;
+      }
+    }
+  }
+  async function handleDayClick() {
+    const resp = await setTodayDisplayToTrue()
+    console.log(resp);
+    window.location.reload(false);
+  };
+
+
+
+  async function handleAllClick() {
+    const resp = await setAllDisplayToTrue()
+    console.log(resp);
+    window.location.reload(false);
+  };
+
+  async function handleWeekClick() {
+    const resp = await setWeekDisplayToTrue()
+    console.log(resp);
+    window.location.reload(false);
+  };
+
+  const history = useHistory();
+
+  const handleRouteCom = () => {
+    history.push("/completed");
+  }
 
   const { numSelected } = props;
   const { selectedItems } = props;
@@ -249,7 +434,7 @@ const EnhancedTableToolbar = (props) => {
           variant="subtitle1"
           component="div"
         >
-          {numSelected} selected 
+          {numSelected} selected
         </Typography>
       ) : (
         <Typography
@@ -260,77 +445,77 @@ const EnhancedTableToolbar = (props) => {
         >
           To Do List
 
-        <Button variant="outlined" style={{ height: '45px', width: '100px', top: 10, left: 65 }}>
-          <AddIcon/>
-       Add
-      </Button>
+          <Button variant="outlined" style={{ height: '45px', width: '100px', top: 10, left: 65 }}>
+            <AddIcon />
+            Add
+          </Button>
 
-        <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 70 }}>
-       All Tasks
-      </Button>
+          <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 70 }} onClick={handleAllClick}>
+            All Tasks
+          </Button>
 
-      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left:75 }}>
-       Today
-      </Button>
+          <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 75 }} onClick={handleDayClick}>
+            Today
+          </Button>
 
-      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 80 }}>
-       Week
-      </Button>
+          <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 80 }} onClick={handleWeekClick}>
+            Week
+          </Button>
 
-      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 85 }} onClick = {handleRouteCom}>
-       Completed 
-      </Button>
+          <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 85 }} onClick={handleRouteCom}>
+            Completed
+          </Button>
 
-      <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 200}} onClick={handleClickOpen}>
-        <FilterListIcon />
-          Filter
-        </Button>
+          <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 190 }} onClick={handleClickOpen}>
+            <FilterListIcon />
+            Filter
+          </Button>
 
-        <BootstrapDialog
-          onClose={handleClose}
-          aria-labelledby="customized-dialog-title"
-          open={open}
-        >
-          <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-            Filter Events
-            <Filter />
-            
-          </BootstrapDialogTitle>
-        </BootstrapDialog>
+          <BootstrapDialog
+            onClose={handleClose}
+            aria-labelledby="customized-dialog-title"
+            open={open}
+          >
+            <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
+              Filter Events
+              <Filter />
+
+            </BootstrapDialogTitle>
+          </BootstrapDialog>
         </Typography>
-        
+
       )}
 
       {numSelected === 1 ? (
-          <AddToCompleteModal selectedItems = {selectedItems} />
-             
+        <AddToCompleteModal selectedItems={selectedItems} />
+
       ) : (
         <div>
-          
-      </div>
+
+        </div>
       )}
 
-{numSelected >= 2 ? (
-               < Typography
-               sx={{ flex: '1 1 100%' }}
-               align = "right"
-               variant="h6"
-               id="tableTitle"
-               component="div"
-             >
-               Please select one event
-              </Typography>
+      {numSelected >= 2 ? (
+        < Typography
+          sx={{ flex: '1 1 100%' }}
+          align="right"
+          variant="h6"
+          id="tableTitle"
+          component="div"
+        >
+          Please select one event
+        </Typography>
       ) : (
         <div>
-      </div>
+        </div>
       )}
 
 
-      
+
 
     </Toolbar>
 
-    
+
   );
 };
 
@@ -339,7 +524,7 @@ EnhancedTableToolbar.propTypes = {
   selectedItems: PropTypes.arrayOf(Object),
 };
 
-export default function EnhancedTable({loggedIn}) {
+export default function EnhancedTable({ loggedIn, userID }) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('importance');
   //const [orderBy, setOrderBy] = React.useState('importance');
@@ -348,7 +533,6 @@ export default function EnhancedTable({loggedIn}) {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [events, setEvent] = useState([]);
-
 
 
   const handleRequestSort = (event, property) => {
@@ -406,31 +590,37 @@ export default function EnhancedTable({loggedIn}) {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - events.length) : 0;
+
+  React.useEffect(() => {
     const getEventData = async () => {
-        try {
-            const data = await axios.get("http://localhost:5000/todos");
-            const rows = []
-            for(let i = 0; i < data.data.length; i++) {
-                let resp = data.data[i]
-                const date = moment(resp.end).format('L, h:mm a')
-                const importance = importanceSymbol[resp.importance]
-                rows.push(createData(resp.title, date, importance, resp._id, resp.category))
-            }
-            setEvent(rows);
-        }catch (e) {
-            console.log(e);
+      try {
+        const data = await axios.get("http://localhost:5000/todos/" + userID);
+        const rows = []
+        for (let i = 0; i < data.data.length; i++) {
+          let resp = data.data[i]
+  
+          const date = moment(resp.end).format('L, h:mm a')
+          //SHOW THEM THIS
+          // console.log(resp.end)
+          // console.log(date)
+          const importance = importanceSymbol[resp.importance]
+          if (resp.display === true)
+            rows.push(createData(resp.title, date, importance, resp._id, resp.category))
         }
-        };
-        React.useEffect(() => {
-            getEventData();
-        }, []);
-  if(!loggedIn){
+        setEvent(rows);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getEventData();
+  }, [userID]);
+  if (!loggedIn) {
     return <Redirect to="/login"></Redirect>
   }
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} selectedItems={selected} />
+        <EnhancedTableToolbar numSelected={selected.length} selectedItems={selected} userID={userID}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -483,6 +673,7 @@ export default function EnhancedTable({loggedIn}) {
                       </TableCell>
                       <TableCell align="right">{row.duedate}</TableCell>
                       <TableCell align="right">{row.importance}</TableCell>
+                      <TableCell align="right">{row.category}</TableCell>
                     </TableRow>
                   );
                 })}
@@ -516,6 +707,3 @@ export default function EnhancedTable({loggedIn}) {
     </Box>
   );
 }
-
-
-

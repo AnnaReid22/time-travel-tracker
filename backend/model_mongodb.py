@@ -8,9 +8,6 @@ import hashlib
 from dotenv import load_dotenv
 
 class Model(dict):
-    """
-    A simple model that wraps mongodb document
-    """
     __getattr__ = dict.get
     __delattr__ = dict.__delitem__
     __setattr__ = dict.__setitem__
@@ -73,14 +70,20 @@ class Todo(Model):
             todo["_id"] = str(todo["_id"])
         return todos
 
-    def find_completed(self):
-        todos = list(self.collection.find({"completed" : True}))
+    def find_completed_by_user(self, user):
+        todos = list(self.collection.find({"completed" : True, "user": user}))
+        for todo in todos:
+            todo["_id"] = str(todo["_id"])
+        return todos
+
+    def find_all_todos_by_user(self, user):
+        todos = list(self.collection.find({ "user": user }))
         for todo in todos:
             todo["_id"] = str(todo["_id"])
         return todos
 
     def find_todos(self):
-        todos = list(self.collection.find({"completed" : False}))
+        todos = list(self.collection.find({ "completed" : False }))
         for todo in todos:
             todo["_id"] = str(todo["_id"])
         return todos
@@ -89,6 +92,12 @@ class Todo(Model):
         return self.collection.update_one(
             {"_id": ObjectId(id) },
             { "$set":{"completed": bool}},
+            upsert=False)
+
+    def update_display(self, id, bool):
+        return self.collection.update_one(
+            {"_id": ObjectId(id) },
+            { "$set":{"display": bool}},
             upsert=False)
 
     def update_one(self, id, replacement):

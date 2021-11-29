@@ -96,6 +96,7 @@ export function RemoveFromCompleteModal (items) {
     }
     async function setCompleteToFalse(){
         const ids = items["selectedItems"]
+        
         for(let i = 0; i < ids.length; i++) {
             const completed = {
                 completed: false
