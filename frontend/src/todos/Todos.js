@@ -29,26 +29,36 @@ import { useHistory } from "react-router-dom";
 import AddIcon from '@mui/icons-material/Add';
 import { AddToCompleteModal } from "./completeModals";
 import axios from 'axios';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Redirect } from 'react-router';
 import moment from "moment";
+import EditIcon from '@mui/icons-material/Edit';
+import EditEventModal from "../calendar/EditEventModal";
+import AddEventModal from "../calendar/AddEventModal";
 //TO REDIRECT TO CONFIRMATION PAGE OR OTHER PAGES 
 // it works sometimes... its a little odd 
 //  <Redirect to = "/confirmation"/>
 
 
 
-function createData(task, duedate, importance, obId, category) {
+function createData(task, duedate, importance, obId, category, todo) {
   return {
     task,
     duedate,
     importance,
     obId,
-    category
+    category,
+    todo
   };
 }
 
-
+function addEventTime() {
+  var event = {
+    start: new Date(),
+    end: new Date(),
+  }
+  return event
+}
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -60,7 +70,7 @@ function descendingComparator(a, b, orderBy) {
   return 0;
 }
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+const BootstrapDialog = styled(Dialog)(({ theme, userID }) => ({
   '& .MuiDialogContent-root': {
     padding: theme.spacing(2),
   },
@@ -89,13 +99,7 @@ const BootstrapDialogTitle = (props) => {
         </IconButton>
 
       ) : null}
-      <Button
-        variant="outlined"
-        style={{ width: "300px", left: 25, top: -15 }}
-        startIcon={<AddIcon />}
-      >
-        Apply
-      </Button>
+     
 
     </DialogTitle>
   );
@@ -150,12 +154,14 @@ const headCells = [
   //   numeric: true,
   //   disablePadding: false,
   // },
-  // {
-  //   id: 'category',
-  //   numeric: true,
-  //   disablePadding: false,
-  // },
+   {
+    id: 'category',
+    numeric: true,
+    disablePadding: false,
+    label : 'category',
+  },
 ];
+
 const importanceSymbol = ["", "!", "", "!!", "", "!!!", "", "!!!!"]
 
 function EnhancedTableHead(props) {
@@ -221,7 +227,7 @@ const EnhancedTableToolbar = (props) => {
 
   async function fetchAll() {
     try {
-      const response = await axios.get("http://localhost:5000/todos");
+      const response = await axios.get('http://localhost:5000/todos/' + userID);
       // console.log(response.data);
       return response.data;
     }
@@ -243,9 +249,9 @@ const EnhancedTableToolbar = (props) => {
         display: true
       }
       try {
-        const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+       await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
         //console.log(response);
-        return response.data;
+        //return response.data;
       }
       catch (error) {
         console.log(error);
@@ -277,10 +283,16 @@ const EnhancedTableToolbar = (props) => {
       const display = {
         display: false
       }
+      const displayT = {
+        display: true
+      }
       try {
         if (year !== todayYear || month !== todayMonth || day !== todayDay) {
-          const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
-          return response.data;
+         await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+          //return response.data;
+        }
+        else{
+         await axios.put('http://localhost:5000/todos/id/' + data[i]._id, displayT);
         }
       }
       catch (error) {
@@ -365,12 +377,18 @@ const EnhancedTableToolbar = (props) => {
       const display = {
         display: false
       }
+      const displayT = {
+        display: true
+      }
       try {
 
         if (actual.getTime() < firstday.getTime() || actual.getTime() > lastday.getTime()) {
-          const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
-          console.log(response);
-          return response;
+          await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+         // console.log(response);
+          //return response;
+        }
+        else{
+          await axios.put('http://localhost:5000/todos/id/' + data[i]._id, displayT);
         }
       }
       catch (error) {
@@ -405,8 +423,56 @@ const EnhancedTableToolbar = (props) => {
     history.push("/completed");
   }
 
+  const [events, setEvents]= React.useState([]);
+  const [modalAdd, setModalAdd]= useState(false);
+  const [modalEdit, setModalEdit]= useState(false);
+  const [clickedEvent, setClickedEvent]= useState({});
+
   const { numSelected } = props;
+  const { userID } = props;
   const { selectedItems } = props;
+
+  useEffect(() => { 
+    async function getEvents(){
+      try {
+        const response = await axios.get('http://localhost:5000/todos/' + userID);
+        if(response.status === 201){
+        for(let i = 0; i < response.data.length; i++) {
+          let resp = response.data[i]
+          resp.start = new Date(resp.start)
+          resp.end = new Date(resp.end)
+        }
+        setEvents(response.data)
+        }
+        else {
+          console.log("Error, todos not found.")
+        }
+      }
+      catch (error) {
+        console.log(error);
+        return false;
+      }
+     }
+    getEvents();
+  }, [userID]);
+
+  function handleEdit() {
+    setModalEdit(true);
+  };
+
+  function handleAdd() {
+    var event = addEventTime();
+    setClickedEvent(event);
+    setModalAdd(true);
+  };
+
+  function handleCloseAdd() {
+    setModalAdd(false);
+  };
+
+  function handleCloseEdit() {
+    setModalEdit(false);
+  };
 
 
   return (
@@ -438,10 +504,19 @@ const EnhancedTableToolbar = (props) => {
         >
           To Do List
 
-          <Button variant="outlined" style={{ height: '45px', width: '100px', top: 10, left: 65 }}>
-            <AddIcon />
-            Add
+          <Button onClick = {handleAdd} variant="outlined" style={{ height: '45px', width: '100px', top: 10, left: 65 }}>
+            <AddIcon/>
+              Add
           </Button>
+
+          <Dialog open={modalAdd} onClose={handleCloseAdd}>
+            <AddEventModal 
+              clicked={clickedEvent} 
+              events={events} 
+              setEvents={setEvents} 
+              setModal={setModalAdd} 
+              userID={userID}/>
+          </Dialog>
 
           <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 70 }} onClick={handleAllClick}>
             All Tasks
@@ -480,8 +555,19 @@ const EnhancedTableToolbar = (props) => {
       )}
 
       {numSelected === 1 ? (
-        <AddToCompleteModal selectedItems={selectedItems} />
-
+        <>
+          <IconButton >
+            <EditIcon onClick = {handleEdit}/>
+          </IconButton>
+          <AddToCompleteModal selectedItems = {selectedItems[0]} />
+          <Dialog open={modalEdit} onClose={handleCloseEdit}>
+            <EditEventModal 
+                  clicked={selectedItems[0]} 
+                  events={events} 
+                  setEvents={setEvents} 
+                  setModal={setModalEdit} />
+          </Dialog>
+        </>
       ) : (
         <div>
 
@@ -502,30 +588,24 @@ const EnhancedTableToolbar = (props) => {
         <div>
         </div>
       )}
-
-
-
-
     </Toolbar>
-
-
   );
 };
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
   selectedItems: PropTypes.arrayOf(Object),
+  userID: PropTypes.string.isRequired,
 };
 
-export default function EnhancedTable({loggedIn, userID}) {
+export default function EnhancedTable({ loggedIn, userID }) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('importance');
-  //const [orderBy, setOrderBy] = React.useState('importance');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [events, setEvent] = useState([]);
+  const [events, setEvents] = React.useState([]);
 
 
   const handleRequestSort = (event, property) => {
@@ -584,31 +664,36 @@ export default function EnhancedTable({loggedIn, userID}) {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - events.length) : 0;
 
-        React.useEffect(() => {
-          const getEventData = async () => {
-            try {
-                const data = await axios.get("http://localhost:5000/todos/" + userID);
-                const rows = []
-                for(let i = 0; i < data.data.length; i++) {
-                    let resp = data.data[i]
-                    const date = moment(resp.end).format('L, h:mm a')
-                    const importance = importanceSymbol[resp.importance]
-                    rows.push(createData(resp.title, date, importance, resp._id, resp.category))
-                }
-                setEvent(rows);
-          }catch (e) {
-              console.log(e);
-          }
-          };
-          getEventData();
-        }, [userID]);
-  if(!loggedIn){
+  React.useEffect(() => {
+    const getEventData = async () => {
+      try {
+        const data = await axios.get("http://localhost:5000/todos/" + userID);
+        const rows = []
+        for (let i = 0; i < data.data.length; i++) {
+          let resp = data.data[i]
+  
+          const date = moment(resp.end).format('L, h:mm a')
+          //SHOW THEM THIS
+          // console.log(resp.end)
+          // console.log(date)
+          const importance = importanceSymbol[resp.importance]
+          if (resp.display === true)
+            rows.push(createData(resp.title, date, importance, resp._id, resp.category,resp))
+        }
+        setEvents(rows);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getEventData();
+  }, [userID]);
+  if (!loggedIn) {
     return <Redirect to="/login"></Redirect>
   }
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} selectedItems={selected} />
+        <EnhancedTableToolbar numSelected={selected.length} selectedItems={selected} userID={userID}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -629,17 +714,17 @@ export default function EnhancedTable({loggedIn, userID}) {
               {stableSort(events, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.obId);
+                  const isItemSelected = isSelected(row.todo);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.obId)}
+                      onClick={(event) => handleClick(event, row.todo)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.obId}
+                      key={row.todo}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
@@ -661,6 +746,7 @@ export default function EnhancedTable({loggedIn, userID}) {
                       </TableCell>
                       <TableCell align="right">{row.duedate}</TableCell>
                       <TableCell align="right">{row.importance}</TableCell>
+                      <TableCell align="right">{row.category}</TableCell>
                     </TableRow>
                   );
                 })}
@@ -694,6 +780,3 @@ export default function EnhancedTable({loggedIn, userID}) {
     </Box>
   );
 }
-
-
-

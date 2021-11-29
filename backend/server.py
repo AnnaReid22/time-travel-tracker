@@ -50,7 +50,7 @@ def add_todo():
 
 @app.route('/todos/<user>', methods=['GET'])
 def get_all_todos_by_user(user):
-    return jsonify(Todo().find_all_todos_by_user(user)), 201
+    return jsonify(Todo().find_uncompleted_by_user(user)), 201
 
 @app.route('/todos/completed/<user>', methods=['GET'])
 def get_completed_todos_by_user(user):

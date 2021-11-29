@@ -10,7 +10,6 @@ import Button from '@mui/material/Button';
 import { useHistory } from "react-router-dom";
 import CheckIcon from '@mui/icons-material/Check';
 import axios from 'axios';
-import EditIcon from '@mui/icons-material/Edit';
 
 const style = {
     position: 'absolute',
@@ -36,33 +35,28 @@ export function AddToCompleteModal (items) {
         history.push("/finish");
     }
     async function setCompleteToTrue(){
-        const ids = items["selectedItems"]
-        for(let i = 0; i < ids.length; i++) {
-            const completed = {
-                completed: true
+        const id = items["selectedItems"]._id
+        const completed = {
+            completed: true
+        }
+        try {
+            const response = await axios.put('http://localhost:5000/todos/completed/' + id, completed);
+            if(response.status === 204){
+                 console.log("completed was set to false")
             }
-            try {
-                const response = await axios.put('http://localhost:5000/todos/completed/' + ids[i], completed);
-                if(response.status === 204){
-                    console.log("completed was set to false")
-                }
-                else {
-                    console.log("Error, event not deleted from database.")
-                }
+            else {
+                console.log("Error, event not deleted from database.")
             }
-            catch (error) {
-                console.log(error);
-                return false;
-            }
+        }
+        catch (error) {
+            console.log(error);
+            return false;
         }
     }
     return (
         <div>
          <IconButton >
              <CheckIcon onClick={handleOpen}/>     
-         </IconButton>
-         <IconButton >
-             <EditIcon />  
          </IconButton>
          <Modal
              open={open}
@@ -96,27 +90,25 @@ export function RemoveFromCompleteModal (items) {
         setCompleteToFalse()
         history.push("/todos");
     }
-    async function setCompleteToFalse(){
-        const ids = items["selectedItems"]
-        
-        for(let i = 0; i < ids.length; i++) {
-            const completed = {
-                completed: false
+    async function setCompleteToFalse(){        
+        const id = items["selectedItems"]._id
+        console.log(id)
+        const completed = {
+            completed: false
+        }
+        try {
+            const response = await axios.put('http://localhost:5000/todos/completed/' + id, completed);
+            if(response.status === 204){
+                console.log("completed was set to false")
             }
-            try {
-                const response = await axios.put('http://localhost:5000/todos/completed/' + ids[i], completed);
-                if(response.status === 204){
-                    console.log("completed was set to false")
-                }
-                else {
-                    console.log("Error, event not deleted from database.")
-                }
-            }
-            catch (error) {
-                console.log(error);
-                return false;
+            else {
+                console.log("Error, event not deleted from database.")
             }
         }
+        catch (error) {
+            console.log(error);
+            return false;
+        }  
     }
     return (
         <div>
