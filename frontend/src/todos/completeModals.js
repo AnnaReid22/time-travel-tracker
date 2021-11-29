@@ -40,7 +40,7 @@ export function AddToCompleteModal (items) {
                 completed: true
             }
             try {
-                const response = await axios.put('http://localhost:5000/todos/completed/' + ids[i], completed);
+                const response = await axios.put('https://cryptic-bastion-64970.herokuapp.com/todos/completed/' + ids[i], completed);
                 if(response.status === 204){
                     console.log("completed was set to false")
                 }
@@ -102,7 +102,7 @@ export function RemoveFromCompleteModal (items) {
                 completed: false
             }
             try {
-                const response = await axios.put('http://localhost:5000/todos/completed/' + ids[i], completed);
+                const response = await axios.put('https://cryptic-bastion-64970.herokuapp.com/todos/completed/' + ids[i], completed);
                 if(response.status === 204){
                     console.log("completed was set to false")
                 }

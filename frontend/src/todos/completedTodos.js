@@ -285,7 +285,7 @@ export default function EnhancedTable({loggedIn, userID}) {
         React.useEffect(() => {
             const getEventData = async () => {
                 try {
-                    const data = await axios.get("http://localhost:5000/todos/completed/" + userID);
+                    const data = await axios.get("https://cryptic-bastion-64970.herokuapp.com/todos/completed/" + userID);
                     const rows = []
                     for(let i = 0; i < data.data.length; i++) {
                         let resp = data.data[i]

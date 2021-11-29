@@ -57,7 +57,7 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
 
     async function deleteEvent(){
         try {
-            const response = await axios.delete('http://localhost:5000/todos/' + clicked._id);
+            const response = await axios.delete('https://cryptic-bastion-64970.herokuapp.com/todos/' + clicked._id);
             if(response.status === 204){
                 events = events.filter(e => e._id !== clicked._id)
                 setEvents([...events])
@@ -99,7 +99,7 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
                     event.end = moment(event.start).add(difference, 'hours');
                 }
             }
-            const response = await axios.put('http://localhost:5000/todos/' + clicked._id, event);
+            const response = await axios.put('https://cryptic-bastion-64970.herokuapp.com/todos/' + clicked._id, event);
             if(response.status === 204){
                 events = events.filter(e => e._id !== clicked._id)
                 event["_id"] = clicked._id

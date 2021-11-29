@@ -20,7 +20,7 @@ export default function MyCalendar({loggedIn, userID}) {
   useEffect(() => { 
     async function getEvents(){
       try {
-        const response = await axios.get('http://localhost:5000/todos/' + userID);
+        const response = await axios.get('https://cryptic-bastion-64970.herokuapp.com/todos/' + userID);
         if(response.status === 201){
         for(let i = 0; i < response.data.length; i++) {
           let resp = response.data[i]

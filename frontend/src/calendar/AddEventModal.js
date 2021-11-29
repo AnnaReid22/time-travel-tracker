@@ -72,7 +72,7 @@ export default function AddEventModal ({clicked, events, setEvents, setModal, us
                     event.end = moment(event.start).add(difference, 'days');
                 }
             }
-            const response = await axios.post('http://localhost:5000/todos', event);
+            const response = await axios.post('https://cryptic-bastion-64970.herokuapp.com/todos', event);
             if(response.status === 201 && event.givenStart >= today.setHours(0,0,0,0)){
                 setEvents([...events, response.data])
             }

@@ -216,7 +216,7 @@ const EnhancedTableToolbar = (props) => {
 
   async function fetchAll() {
     try {
-     const response = await axios.get("http://localhost:5000/todos/" + props.userID);
+     const response = await axios.get("https://cryptic-bastion-64970.herokuapp.com/todos/" + props.userID);
       // console.log(response.data);
       return response.data;
     }
@@ -238,7 +238,7 @@ const EnhancedTableToolbar = (props) => {
         display: true
       }
       try {
-       await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+       await axios.put('https://cryptic-bastion-64970.herokuapp.com/todos/id/' + data[i]._id, display);
         //console.log(response);
         //return response.data;
       }
@@ -277,11 +277,11 @@ const EnhancedTableToolbar = (props) => {
       }
       try {
         if (year !== todayYear || month !== todayMonth || day !== todayDay) {
-         await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+         await axios.put('https://cryptic-bastion-64970.herokuapp.com/todos/id/' + data[i]._id, display);
           //return response.data;
         }
         else{
-         await axios.put('http://localhost:5000/todos/id/' + data[i]._id, displayT);
+         await axios.put('https://cryptic-bastion-64970.herokuapp.com/todos/id/' + data[i]._id, displayT);
         }
       }
       catch (error) {
@@ -372,12 +372,12 @@ const EnhancedTableToolbar = (props) => {
       try {
 
         if (actual.getTime() < firstday.getTime() || actual.getTime() > lastday.getTime()) {
-          await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+          await axios.put('https://cryptic-bastion-64970.herokuapp.com/todos/id/' + data[i]._id, display);
          // console.log(response);
           //return response;
         }
         else{
-          await axios.put('http://localhost:5000/todos/id/' + data[i]._id, displayT);
+          await axios.put('https://cryptic-bastion-64970.herokuapp.com/todos/id/' + data[i]._id, displayT);
         }
       }
       catch (error) {
@@ -594,7 +594,7 @@ export default function EnhancedTable({ loggedIn, userID }) {
   React.useEffect(() => {
     const getEventData = async () => {
       try {
-        const data = await axios.get("http://localhost:5000/todos/" + userID);
+        const data = await axios.get("https://cryptic-bastion-64970.herokuapp.com/todos/" + userID);
         const rows = []
         for (let i = 0; i < data.data.length; i++) {
           let resp = data.data[i]
