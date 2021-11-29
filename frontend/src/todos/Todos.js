@@ -60,7 +60,7 @@ function descendingComparator(a, b, orderBy) {
   return 0;
 }
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+const BootstrapDialog = styled(Dialog)(({ theme, userID }) => ({
   '& .MuiDialogContent-root': {
     padding: theme.spacing(2),
   },
@@ -216,7 +216,7 @@ const EnhancedTableToolbar = (props) => {
 
   async function fetchAll() {
     try {
-     const response = await axios.get("http://localhost:5000/todos");
+     const response = await axios.get("http://localhost:5000/todos/" + props.userID);
       // console.log(response.data);
       return response.data;
     }
@@ -524,7 +524,7 @@ EnhancedTableToolbar.propTypes = {
   selectedItems: PropTypes.arrayOf(Object),
 };
 
-export default function EnhancedTable({ loggedIn }) {
+export default function EnhancedTable({ loggedIn, userID }) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('importance');
   //const [orderBy, setOrderBy] = React.useState('importance');
@@ -590,36 +590,37 @@ export default function EnhancedTable({ loggedIn }) {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - events.length) : 0;
-  const getEventData = async () => {
-    try {
-      const data = await axios.get("http://localhost:5000/todos");
-      const rows = []
-      for (let i = 0; i < data.data.length; i++) {
-        let resp = data.data[i]
 
-        const date = moment(resp.end).format('L, h:mm a')
-        //SHOW THEM THIS
-        // console.log(resp.end)
-        // console.log(date)
-        const importance = importanceSymbol[resp.importance]
-        if (resp.display === true)
-          rows.push(createData(resp.title, date, importance, resp._id, resp.category))
-      }
-      setEvent(rows);
-    } catch (e) {
-      console.log(e);
-    }
-  };
   React.useEffect(() => {
+    const getEventData = async () => {
+      try {
+        const data = await axios.get("http://localhost:5000/todos/" + userID);
+        const rows = []
+        for (let i = 0; i < data.data.length; i++) {
+          let resp = data.data[i]
+  
+          const date = moment(resp.end).format('L, h:mm a')
+          //SHOW THEM THIS
+          // console.log(resp.end)
+          // console.log(date)
+          const importance = importanceSymbol[resp.importance]
+          if (resp.display === true)
+            rows.push(createData(resp.title, date, importance, resp._id, resp.category))
+        }
+        setEvent(rows);
+      } catch (e) {
+        console.log(e);
+      }
+    };
     getEventData();
-  }, []);
+  }, [userID]);
   if (!loggedIn) {
     return <Redirect to="/login"></Redirect>
   }
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} selectedItems={selected} />
+        <EnhancedTableToolbar numSelected={selected.length} selectedItems={selected} userID={userID}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
