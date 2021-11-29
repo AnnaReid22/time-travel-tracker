@@ -77,7 +77,7 @@ class Todo(Model):
         return todos
 
     def find_all_todos_by_user(self, user):
-        todos = list(self.collection.find({ "user": user }))
+        todos = list(self.collection.find({ "completed" : False, "user": user }))
         for todo in todos:
             todo["_id"] = str(todo["_id"])
         return todos
