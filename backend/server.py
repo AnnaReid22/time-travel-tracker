@@ -9,11 +9,7 @@ from flask_cors import CORS, cross_origin
 from model_mongodb import User
 from model_mongodb import Todo
 
-app = Flask(__name__, static_folder='build/', static_url_path='/')
-
-@app.route('/')
-def index():
-    return app.send_static_file('index.html')
+app = Flask(__name__)
 
 #login API routes
 @app.route('/users', methods=['POST'])
