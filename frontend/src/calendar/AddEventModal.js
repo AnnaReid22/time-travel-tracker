@@ -90,9 +90,10 @@ export default function AddEventModal ({clicked, events, setEvents, setModal, us
         }
     }
 
-    const handleSubmit = () => {
-        addNewEvent()
+    async function handleSubmit(){
+        await addNewEvent()
         setModal(false)
+        window.location.reload(false);
     }
 
     const importance = [
