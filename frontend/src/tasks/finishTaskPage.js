@@ -32,6 +32,9 @@ export default function IconLabelButtons({loggedIn}) {
   const handleRouteCal = () =>{ 
     history.push("/calendar");
   }
+  const handleRouteCom = () =>{ 
+    history.push("/completed");
+  }
   if(!loggedIn){
     return <Redirect to="/login"></Redirect>
   }
@@ -55,6 +58,9 @@ export default function IconLabelButtons({loggedIn}) {
             </Button>
             <Button variant="contained" style={{ height: '45px', width: '310px', top: 80, left: -360}}onClick={handleRoute} >
                 Go to Todo
+            </Button>
+            <Button variant="contained" style={{ height: '45px', width: '310px', top: 150, left: -670}}onClick={handleRouteCom} >
+                Go to Complete
             </Button>
         </Typography>
     );
