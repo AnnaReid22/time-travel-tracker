@@ -9,6 +9,7 @@ import Select from '@mui/material/Select';
 import Chip from '@mui/material/Chip';
 import { Button } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
+import axios from 'axios';
 
 
 const ITEM_HEIGHT = 48;
@@ -22,14 +23,17 @@ const MenuProps = {
   },
 };
 
+const importanceSymbol = ["", "!", "", "!!", "", "!!!", "", "!!!!"]
+
 
 const filters = [
-'School',
-'Work', 
-'Personal',
-'!', 
-'!!',
-'!!!',
+  'School',
+  'Work',
+  'Other',
+  '!',
+  '!!',
+  '!!!',
+  '!!!!'
 
 ];
 
@@ -46,17 +50,56 @@ function getStyles(label, filter, theme) {
 export default function MultipleSelectChip() {
   const theme = useTheme();
   const [filter, setFilter] = React.useState([]);
-  //const [open, setOpen] = React.useState(false);
 
-//   const handleClose = () => {
-//   setOpen(false);
-// };
+  const handleClear = (event) => {
+    setFilter(
+      []
+    )
+  }
 
-const handleClear = (event)=>{
-  setFilter(
-    []
-  )
-}
+  async function fetchAll() {
+    try {
+      const response = await axios.get("http://localhost:5000/todos");
+      // console.log(response.data);
+      return response.data;
+    }
+    catch (error) {
+      //We're not handling errors. Just logging into the console.
+      console.log(error);
+      return false;
+    }
+  };
+
+  // //ACTUAL ALL BUTTON ACTION
+  async function applyFilters() {
+    const data = await fetchAll()
+    console.log(filter);
+
+    for (let i = 0; i < data.length; i++) {
+      console.log("checking");
+      const display = {
+        display: true
+      }
+      const displayF = {
+        display: false
+      }
+
+      try {
+        const importance = importanceSymbol[data[i].importance]
+        if (filter.includes(importance) || filter.includes(data[i].category)) {
+          await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+        }
+        else {
+          await axios.put('http://localhost:5000/todos/id/' + data[i]._id, displayF);
+        }
+      }
+      catch (error) {
+        console.log(error);
+        return false;
+      }
+    }
+    window.location.reload(false);
+  }
   const handleChange = (event) => {
     const {
       target: { value },
@@ -79,9 +122,9 @@ const handleClear = (event)=>{
           onChange={handleChange}
           input={<OutlinedInput id="select-multiple-chip" label="Filters" />}
           renderValue={(selected) => (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
               {selected.map((value) => (
-               <Chip key={value} label={value} />
+                <Chip key={value} label={value} />
               ))}
             </Box>
           )}
@@ -92,30 +135,33 @@ const handleClear = (event)=>{
               key={label}
               value={label}
               style={getStyles(label, filter, theme)}
-              //displays options 
+            //displays options 
             >
               {label}
             </MenuItem>
           ))}
         </Select>
-        { <Button onClick = {handleClear}
-          variant="outlined"
-          style={{ width: "300px", top:5 }}
-          startIcon={< ClearIcon/>}
-        >
-          Clear 
-        </Button>
-        /*
-        <Button onClick={handleClose}
-          variant="outlined"
-          style={{ width: "300px", top: 10}}
-          startIcon={<AddIcon />}
-        >
-          Apply 
-        </Button> */}
-        
+
+        {
+          <div class="btn-group">
+            <Button onClick={handleClear}
+              variant="outlined"
+              style={{ width: "300px", top: 5 }}
+              startIcon={< ClearIcon />}
+            >
+              Clear
+            </Button>
+            <Button onClick={applyFilters}
+              variant="outlined"
+              style={{ width: "300px", top: 10 }}
+            >
+              Apply
+            </Button>
+          </div>
+        }
+
       </FormControl>
-     
+
     </div>
 
   );
