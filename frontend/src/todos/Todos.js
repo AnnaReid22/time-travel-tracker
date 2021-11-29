@@ -148,7 +148,7 @@ const headCells = [
     id: 'category',
     numeric: true,
     disablePadding: false,
-    label : 'category',
+    label : 'Category',
   },
 ];
 const importanceSymbol = ["", "!", "", "!!", "", "!!!", "", "!!!!"]
@@ -391,7 +391,6 @@ const EnhancedTableToolbar = (props) => {
     console.log(resp);
     window.location.reload(false);
   };
-
 
 
   async function handleAllClick() {

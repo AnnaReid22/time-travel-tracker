@@ -33,11 +33,12 @@ export default function IconLabelButtons({loggedIn}) {
             <Typography variant="h5" mt={5} ml={-13}>
                 {"The actual due date was: "}
             </Typography>
-            <Button variant="contained" style={{ height: '45px', width: '310px', top: 10, left: -50 }} onClick={handleRouteCal}>
+            
+            <Button variant="contained" style={{ height: '45px', width: '310px', display: 'flex'}} onClick={handleRouteCal}>
                 Go to Calendar
                 
             </Button>
-            <Button variant="contained" style={{ height: '45px', width: '310px', top: 80, left: -360}}onClick={handleRoute} >
+            <Button variant="contained" style={{ height: '45px', width: '310px', display: 'flex', top: 10}}onClick={handleRoute} >
                 Go to Todo
             </Button>
         </Typography>
