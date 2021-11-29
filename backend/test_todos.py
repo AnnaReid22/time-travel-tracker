@@ -48,6 +48,11 @@ def test_find_completed():
     todoFound = todo in model_mongodb.Todo().find_completed_by_user("test@test.com")
     completeFound = complete in model_mongodb.Todo().find_completed_by_user("test@test.com")
     assert completeFound and not todoFound
+
+def test_find_uncompleted():  
+    completed = todo in model_mongodb.Todo().find_completed_by_user("test@test.com")
+    uncompleted = todo in model_mongodb.Todo().find_uncompleted_by_user("test@test.com")
+    assert uncompleted and not completed
     
 def test_find_todo():  
     todoFound = todo in model_mongodb.Todo().find_todos()
