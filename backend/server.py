@@ -10,6 +10,7 @@ from model_mongodb import User
 from model_mongodb import Todo
 
 app = Flask(__name__)
+CORS(app)
 
 #login API routes
 @app.route('/users', methods=['POST'])

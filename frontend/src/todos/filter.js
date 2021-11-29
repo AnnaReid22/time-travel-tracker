@@ -59,7 +59,7 @@ export default function MultipleSelectChip() {
 
   async function fetchAll() {
     try {
-      const response = await axios.get("http://localhost:5000/todos");
+      const response = await axios.get("https://cryptic-bastion-64970.herokuapp.com/todos");
       // console.log(response.data);
       return response.data;
     }
@@ -87,10 +87,10 @@ export default function MultipleSelectChip() {
       try {
         const importance = importanceSymbol[data[i].importance]
         if (filter.includes(importance) || filter.includes(data[i].category)) {
-          await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+          await axios.put('https://cryptic-bastion-64970.herokuapp.com/todos/id/' + data[i]._id, display);
         }
         else {
-          await axios.put('http://localhost:5000/todos/id/' + data[i]._id, displayF);
+          await axios.put('https://cryptic-bastion-64970.herokuapp.com/todos/id/' + data[i]._id, displayF);
         }
       }
       catch (error) {
