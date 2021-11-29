@@ -47,7 +47,7 @@ function getStyles(label, filter, theme) {
   };
 }
 
-export default function MultipleSelectChip() {
+export default function MultipleSelectChip({userID}) {
   const theme = useTheme();
   const [filter, setFilter] = React.useState([]);
 
@@ -59,7 +59,7 @@ export default function MultipleSelectChip() {
 
   async function fetchAll() {
     try {
-      const response = await axios.get("http://localhost:5000/todos");
+      const response = await axios.get("http://localhost:5000/todos/" + userID);
       // console.log(response.data);
       return response.data;
     }
