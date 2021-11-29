@@ -13,7 +13,7 @@ export default function IconLabelButtons({loggedIn}) {
   const handleRoute = () =>{ 
     history.push("/todos");
   }
-  var data = localStorage.getItem('objectToPass')
+  var data = sessionStorage.getItem('objectToPass')
   const title = getTitle(data)
     
   function getTitle(data){

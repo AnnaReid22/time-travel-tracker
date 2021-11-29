@@ -31,7 +31,7 @@ export function AddToCompleteModal (items) {
     const handleRouteComplete = () =>{ 
         setCompleteToTrue()
         var data = {'time':items["selectedItems"].end, 'title':items["selectedItems"].title}
-        localStorage.setItem( 'objectToPass', JSON.stringify(data));
+        sessionStorage.setItem( 'objectToPass', JSON.stringify(data));
         history.push("/finish");
     }
     async function setCompleteToTrue(){
