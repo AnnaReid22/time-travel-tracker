@@ -60,7 +60,7 @@ export default function IconLabelButtons({loggedIn}) {
                 Go to Todo
             </Button>
             <Button variant="contained" style={{ height: '45px', width: '310px', top: 150, left: -670}}onClick={handleRouteCom} >
-                Go to Complete
+                Go to Completed
             </Button>
         </Typography>
     );
