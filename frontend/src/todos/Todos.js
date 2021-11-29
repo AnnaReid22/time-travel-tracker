@@ -70,7 +70,7 @@ function descendingComparator(a, b, orderBy) {
   return 0;
 }
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+const BootstrapDialog = styled(Dialog)(({ theme, userID }) => ({
   '& .MuiDialogContent-root': {
     padding: theme.spacing(2),
   },
@@ -99,13 +99,7 @@ const BootstrapDialogTitle = (props) => {
         </IconButton>
 
       ) : null}
-      <Button
-        variant="outlined"
-        style={{ width: "300px", left: 25, top: -15 }}
-        startIcon={<AddIcon />}
-      >
-        Apply
-      </Button>
+     
 
     </DialogTitle>
   );
@@ -160,15 +154,11 @@ const headCells = [
   //   numeric: true,
   //   disablePadding: false,
   // },
-  // {
-  //   id: 'category',
-  //   numeric: true,
-  //   disablePadding: false,
-  // },
-  {
-    id: 'todo',
+   {
+    id: 'category',
     numeric: true,
     disablePadding: false,
+    label : 'category',
   },
 ];
 
@@ -237,7 +227,7 @@ const EnhancedTableToolbar = (props) => {
 
   async function fetchAll() {
     try {
-      const response = await axios.get('http://localhost:5000/todos/' + user);
+      const response = await axios.get('http://localhost:5000/todos/' + userID);
       // console.log(response.data);
       return response.data;
     }
@@ -259,9 +249,9 @@ const EnhancedTableToolbar = (props) => {
         display: true
       }
       try {
-        const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+       await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
         //console.log(response);
-        return response.data;
+        //return response.data;
       }
       catch (error) {
         console.log(error);
@@ -293,10 +283,16 @@ const EnhancedTableToolbar = (props) => {
       const display = {
         display: false
       }
+      const displayT = {
+        display: true
+      }
       try {
         if (year !== todayYear || month !== todayMonth || day !== todayDay) {
-          const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
-          return response.data;
+         await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+          //return response.data;
+        }
+        else{
+         await axios.put('http://localhost:5000/todos/id/' + data[i]._id, displayT);
         }
       }
       catch (error) {
@@ -381,12 +377,18 @@ const EnhancedTableToolbar = (props) => {
       const display = {
         display: false
       }
+      const displayT = {
+        display: true
+      }
       try {
 
         if (actual.getTime() < firstday.getTime() || actual.getTime() > lastday.getTime()) {
-          const response = await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
-          console.log(response);
-          return response;
+          await axios.put('http://localhost:5000/todos/id/' + data[i]._id, display);
+         // console.log(response);
+          //return response;
+        }
+        else{
+          await axios.put('http://localhost:5000/todos/id/' + data[i]._id, displayT);
         }
       }
       catch (error) {
@@ -427,13 +429,13 @@ const EnhancedTableToolbar = (props) => {
   const [clickedEvent, setClickedEvent]= useState({});
 
   const { numSelected } = props;
-  const { user } = props;
+  const { userID } = props;
   const { selectedItems } = props;
 
   useEffect(() => { 
     async function getEvents(){
       try {
-        const response = await axios.get('http://localhost:5000/todos/' + user);
+        const response = await axios.get('http://localhost:5000/todos/' + userID);
         if(response.status === 201){
         for(let i = 0; i < response.data.length; i++) {
           let resp = response.data[i]
@@ -452,7 +454,7 @@ const EnhancedTableToolbar = (props) => {
       }
      }
     getEvents();
-  }, [user]);
+  }, [userID]);
 
   function handleEdit() {
     setModalEdit(true);
@@ -513,7 +515,7 @@ const EnhancedTableToolbar = (props) => {
               events={events} 
               setEvents={setEvents} 
               setModal={setModalAdd} 
-              userID={user}/>
+              userID={userID}/>
           </Dialog>
 
           <Button variant="outlined" style={{ height: '45px', width: '150px', top: 10, left: 70 }} onClick={handleAllClick}>
@@ -593,10 +595,10 @@ const EnhancedTableToolbar = (props) => {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
   selectedItems: PropTypes.arrayOf(Object),
-  user: PropTypes.string.isRequired,
+  userID: PropTypes.string.isRequired,
 };
 
-export default function EnhancedTable({loggedIn, userID}) {
+export default function EnhancedTable({ loggedIn, userID }) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('importance');
   const [selected, setSelected] = React.useState([]);
@@ -662,31 +664,36 @@ export default function EnhancedTable({loggedIn, userID}) {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - events.length) : 0;
 
-        React.useEffect(() => {
-          const getEventData = async () => {
-            try {
-                const data = await axios.get("http://localhost:5000/todos/" + userID);
-                const rows = []
-                for(let i = 0; i < data.data.length; i++) {
-                    let resp = data.data[i]
-                    const date = moment(resp.end).format('L, h:mm a')
-                    const importance = importanceSymbol[resp.importance]
-                    rows.push(createData(resp.title, date, importance, resp._id, resp.category, resp))
-                }
-                setEvents(rows);
-          }catch (e) {
-              console.log(e);
-          }
-          };
-          getEventData();
-        }, [userID]);
-  if(!loggedIn){
+  React.useEffect(() => {
+    const getEventData = async () => {
+      try {
+        const data = await axios.get("http://localhost:5000/todos/" + userID);
+        const rows = []
+        for (let i = 0; i < data.data.length; i++) {
+          let resp = data.data[i]
+  
+          const date = moment(resp.end).format('L, h:mm a')
+          //SHOW THEM THIS
+          // console.log(resp.end)
+          // console.log(date)
+          const importance = importanceSymbol[resp.importance]
+          if (resp.display === true)
+            rows.push(createData(resp.title, date, importance, resp._id, resp.category,resp))
+        }
+        setEvents(rows);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getEventData();
+  }, [userID]);
+  if (!loggedIn) {
     return <Redirect to="/login"></Redirect>
   }
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} selectedItems={selected} user={userID}/>
+        <EnhancedTableToolbar numSelected={selected.length} selectedItems={selected} userID={userID}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -739,6 +746,7 @@ export default function EnhancedTable({loggedIn, userID}) {
                       </TableCell>
                       <TableCell align="right">{row.duedate}</TableCell>
                       <TableCell align="right">{row.importance}</TableCell>
+                      <TableCell align="right">{row.category}</TableCell>
                     </TableRow>
                   );
                 })}
@@ -772,6 +780,3 @@ export default function EnhancedTable({loggedIn, userID}) {
     </Box>
   );
 }
-
-
-
