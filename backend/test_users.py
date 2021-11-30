@@ -68,3 +68,15 @@ def test_find_all():
         "cPass":"killme"
     }
     assert user in model_mongodb.User().find_all()
+
+def test_find_by_email():
+    email = "oh@mygod.com"
+    user = {
+        "_id":"617ef920ddb23b7f7447370c",
+        "firstName":"ohmygod",
+        "lastName":"ohmygod",
+        "email":"oh@mygod.com",
+        "password":"killme",
+        "cPass":"killme"
+    }
+    assert(model_mongodb.User().find_by_email(email), user)
