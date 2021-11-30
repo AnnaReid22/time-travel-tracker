@@ -115,14 +115,15 @@ export default function EditEventModal ({clicked, events, setEvents, setModal}) 
         }
     }
 
-    const handleDelete = () => {
-        deleteEvent()
+    async function handleDelete(){
+        await deleteEvent()
         setModal(false)
+        window.location.reload(false);
     }
-
-    const handleUpdate = () => {
-        updateEvent()
+    async function handleUpdate(){
+        await updateEvent()
         setModal(false)
+        window.location.reload(false);
     }
 
     const importance = [
