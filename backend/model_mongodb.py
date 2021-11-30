@@ -6,6 +6,8 @@ import dns
 import os
 import hashlib
 from dotenv import load_dotenv
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 class Model(dict):
     __getattr__ = dict.get
@@ -52,6 +54,11 @@ class User(Model):
             user["_id"] = str(user["_id"])
         return users
 
+    def find_by_email(self, email):
+        user = self.collection.find_one({"email": email})
+        logging.debug(user)
+        return user
+
     def email_exists(self):
         return (self.collection.find({"email": self.email}).limit(1).count() == 1)
     def user_exists(self):
@@ -77,8 +84,11 @@ class Todo(Model):
         return todos
 
     def find_all_todos_by_user(self, user):
+        logging.debug(user)
         todos = list(self.collection.find({ "user": user }))
+        logging.debug(len(todos))
         for todo in todos:
+            logging.debug(type(todo))
             todo["_id"] = str(todo["_id"])
         return todos
 

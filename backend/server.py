@@ -4,8 +4,11 @@ from flask import request
 from flask import jsonify
 import json
 from flask_cors import CORS
+from werkzeug.wrappers import response
 from model_mongodb import User
 from model_mongodb import Todo
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
 CORS(app)
@@ -25,6 +28,20 @@ def register_user():
     else:
         newUser.save()
         return jsonify(newUser), 201
+
+@app.route('/user/<email>', methods=['GET', 'DELETE', 'PUT'])
+def delete_user(email):
+    if request.method == 'GET':
+        response = jsonify({"hi": email}), 201
+        return response
+    if request.method == 'DELETE':
+        delete_todos_by_email(email)
+        deleteUser = User(User().find_by_email(email))
+        if deleteUser.remove(): 
+            resp = jsonify({}), 201
+            return resp
+        else:
+           return jsonify({"error": "User not found"}), 404
 
 
 @app.route('/login', methods=['POST'])
@@ -101,3 +118,14 @@ def get_todo(id):
         else:
            return jsonify({"error": "Todo not found"}), 404
 
+@app.route('/todos/<email>', methods=['GET', 'DELETE'])
+def delete_todos_by_email(email):
+    if request.method == 'DELETE':
+        todos = Todo().find_all_todos_by_user(email)
+        for todo in todos:
+            todo = Todo(todo)
+            if not todo.remove(): 
+                return jsonify({"error": "Todo not found"}), 404
+            elif todo == todos[len(todos) - 1]:
+                resp = jsonify({}), 204
+                return resp
