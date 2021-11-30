@@ -545,7 +545,7 @@ const EnhancedTableToolbar = (props) => {
           >
             <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
               Filter Events
-              <Filter />
+              <Filter userID={userID}/>
 
             </BootstrapDialogTitle>
           </BootstrapDialog>
