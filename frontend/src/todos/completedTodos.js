@@ -30,12 +30,13 @@ import moment from "moment";
 //  <Redirect to = "/confirmation"/>
 
 
-function createData(task, duedate, actual, obId) {
+function createData(task, duedate, actual, obId, todo) {
     return {
         task,
         duedate,
         actual,
-        obId
+        obId,
+        todo
     };
 }
 
@@ -92,6 +93,11 @@ const headCells = [
     },
     {
         id: 'id',
+        numeric: true,
+        disablePadding: false,
+    },
+    {
+        id: 'todo',
         numeric: true,
         disablePadding: false,
     },
@@ -198,7 +204,7 @@ const EnhancedTableToolbar = (props) => {
             )}
 
             {numSelected > 0 ? (
-                <RemoveFromCompleteModal selectedItems = {selectedItems} />
+                <RemoveFromCompleteModal selectedItems = {selectedItems[0]} />
             ) : (
                 <div>
 
@@ -291,7 +297,7 @@ export default function EnhancedTable({loggedIn, userID}) {
                         let resp = data.data[i]
                         const date1 = moment(resp.end).format('L, h:mm a')  
                         const date2 = moment(resp.givenEnd).format('L, h:mm a')
-                        rows.push(createData(resp.title, date1, date2, resp._id))
+                        rows.push(createData(resp.title, date1, date2, resp._id, resp))
                     }
                     setEvent(rows);
                 }catch (e) {
@@ -328,17 +334,17 @@ export default function EnhancedTable({loggedIn, userID}) {
                             {stableSort(events, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
-                                    const isItemSelected = isSelected(row.obId);
+                                    const isItemSelected = isSelected(row.todo);
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={(event) => handleClick(event, row.obId)}
+                                            onClick={(event) => handleClick(event, row.todo)}
                                             role="checkbox"
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
-                                            key={row.obId}
+                                            key={row.todo}
                                             selected={isItemSelected}
                                         >
                                             <TableCell padding="checkbox">
