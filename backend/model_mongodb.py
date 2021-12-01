@@ -6,6 +6,8 @@ import dns
 import os
 import hashlib
 from dotenv import load_dotenv
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 class Model(dict):
     __getattr__ = dict.get
@@ -52,6 +54,17 @@ class User(Model):
             user["_id"] = str(user["_id"])
         return users
 
+    def find_by_email(self, email):
+        user = self.collection.find_one({"email": email})
+        logging.debug(user)
+        return user
+
+    def update_importance(self, email, importanceMeter):
+        return self.collection.update_one(
+            {"email": email },
+            { "$set":{"importanceMeter": importanceMeter}},
+            upsert=False)
+
     def email_exists(self):
         return (self.collection.find({"email": self.email}).limit(1).count() == 1)
     def user_exists(self):
@@ -85,6 +98,7 @@ class Todo(Model):
     def find_uncompleted_by_user(self, user):
         todos = list(self.collection.find({"completed": False, "user": user }))
         for todo in todos:
+            logging.debug(type(todo))
             todo["_id"] = str(todo["_id"])
         return todos
 
@@ -111,4 +125,3 @@ class Todo(Model):
             { "_id": ObjectId(id) }, 
             {"$set": replacement}, 
             upsert=False)
-

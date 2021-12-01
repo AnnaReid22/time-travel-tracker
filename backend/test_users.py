@@ -68,3 +68,31 @@ def test_find_all():
         "cPass":"killme"
     }
     assert user in model_mongodb.User().find_all()
+
+def test_find_by_email():
+    email = "oh@mygod.com"
+    user = {
+        "_id":"617ef920ddb23b7f7447370c",
+        "firstName":"ohmygod",
+        "lastName":"ohmygod",
+        "email":"oh@mygod.com",
+        "password":"killme",
+        "cPass":"killme"
+    }
+    assert(model_mongodb.User().find_by_email(email), user)
+
+def test_update_importance():
+    expected_user = {
+        "_id": "61a701132259d2c284874f52",
+        "firstName": "literally only",
+        "lastName": "exists to pass this one test",
+        "email": "heytheredelilah@newyorkcity.com",
+        "password":"a94a8fe5ccb19ba61c4c0873d391e987982fbbd3",
+        "cPass":"a94a8fe5ccb19ba61c4c0873d391e987982fbbd3",
+        "importanceMeter": [1,2,3,4]
+    }
+    email = "heytheredelilah@newyorkcity.com"
+    importanceMeter = [1,2,3,4]
+    model_mongodb.User().update_importance(email, importanceMeter)
+    new_user = model_mongodb.User().find_by_email(email)
+    assert(new_user, expected_user)
