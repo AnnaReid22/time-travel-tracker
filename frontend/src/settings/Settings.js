@@ -253,15 +253,17 @@ export default function IconLabelButtons({loggedIn, setLoggedIn}) {
               id="outlined-required"
               defaultValue={importanceMeter[3].value}
               onChange={handleChange}
-              style={{marginRight:"80px", marginBottom: "20px"}}
+              style={{marginRight:"80px", marginBottom: "10px"}}
             />
           </Stack>
-          <Button onClick={handleClosePreferences}>
-            Cancel
-          </Button>
-          <Button onClick={putImportanceMeter}>
-            Save
-          </Button>
+          <Stack direction="row" justifyContent="left" marginLeft="15px" marginTop="5px">
+            <Button onClick={handleClosePreferences}>
+              Cancel
+            </Button>
+            <Button onClick={putImportanceMeter}>
+              Save
+            </Button>
+          </Stack>
         </div>
       </Modal>
 
