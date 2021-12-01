@@ -16,7 +16,25 @@ export default function FormPropsTextFields({ setLoggedIn, setUserID }) {
         lastName: "",
         email: "",
         password: "",
-        cPass: ""
+        cPass: "",
+        importanceMeter: [
+            {
+              value: 1,
+              label: '!',
+            },
+            {
+              value: 3,
+              label: '!!',
+            },
+            {
+              value: 5,
+              label: '!!!',
+            },
+            {
+              value: 7,
+              label: '!!!!',
+            },
+          ]
     });
     const [errors, setErrors] = useState({   
         firstName: "",

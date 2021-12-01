@@ -8,6 +8,7 @@ from werkzeug.wrappers import response
 from model_mongodb import User
 from model_mongodb import Todo
 import logging
+from bson import json_util
 logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
@@ -30,14 +31,23 @@ def register_user():
         return jsonify(newUser), 201
 
 @app.route('/user/<email>', methods=['GET', 'DELETE', 'PUT'])
-def delete_user(email):
+def get_user(email):
     if request.method == 'GET':
-        response = jsonify({"hi": email}), 201
+        user = User(User().find_by_email(email))
+        response = json_util.dumps(user), 201
         return response
     if request.method == 'DELETE':
         delete_todos_by_email(email)
         deleteUser = User(User().find_by_email(email))
         if deleteUser.remove(): 
+            resp = jsonify({}), 201
+            return resp
+        else:
+           return jsonify({"error": "User not found"}), 404
+    if request.method == 'PUT':
+        importanceMeterContainer = request.get_json()
+        importanceMeter =  importanceMeterContainer['importanceArray']
+        if User().update_importance(email, importanceMeter): 
             resp = jsonify({}), 201
             return resp
         else:

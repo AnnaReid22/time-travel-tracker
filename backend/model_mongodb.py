@@ -59,6 +59,12 @@ class User(Model):
         logging.debug(user)
         return user
 
+    def update_importance(self, email, importanceMeter):
+        return self.collection.update_one(
+            {"email": email },
+            { "$set":{"importanceMeter": importanceMeter}},
+            upsert=False)
+
     def email_exists(self):
         return (self.collection.find({"email": self.email}).limit(1).count() == 1)
     def user_exists(self):
@@ -119,4 +125,3 @@ class Todo(Model):
             { "_id": ObjectId(id) }, 
             {"$set": replacement}, 
             upsert=False)
-
