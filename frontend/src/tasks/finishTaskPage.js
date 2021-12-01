@@ -59,7 +59,7 @@ export default function IconLabelButtons({loggedIn}) {
             <Button variant="contained" style={{ height: '45px', width: '310px', top: 80, left: -360}}onClick={handleRoute} >
                 Go to Todo
             </Button>
-            <Button variant="contained" style={{ height: '45px', width: '310px', top: 150, left: -670}}onClick={handleRouteCom} >
+            <Button variant="contained" style={{ height: '45px', width: '310px', top: 100, left: -50}}onClick={handleRouteCom} >
                 Go to Completed
             </Button>
         </Typography>

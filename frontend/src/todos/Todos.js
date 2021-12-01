@@ -158,7 +158,7 @@ const headCells = [
     id: 'category',
     numeric: true,
     disablePadding: false,
-    label : 'category',
+    label : 'Category',
   },
 ];
 
@@ -402,7 +402,6 @@ const EnhancedTableToolbar = (props) => {
     console.log(resp);
     window.location.reload(false);
   };
-
 
 
   async function handleAllClick() {

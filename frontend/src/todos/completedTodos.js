@@ -37,6 +37,7 @@ function createData(task, duedate, actual, obId, todo) {
         actual,
         obId,
         todo
+        
     };
 }
 
@@ -96,11 +97,11 @@ const headCells = [
         numeric: true,
         disablePadding: false,
     },
-    {
-        id: 'todo',
-        numeric: true,
-        disablePadding: false,
-    },
+    // {
+    //     id: 'todo',
+    //     numeric: true,
+    //     disablePadding: false,
+    // },
 
 ];
 
@@ -297,7 +298,7 @@ export default function EnhancedTable({loggedIn, userID}) {
                         let resp = data.data[i]
                         const date1 = moment(resp.end).format('L, h:mm a')  
                         const date2 = moment(resp.givenEnd).format('L, h:mm a')
-                        rows.push(createData(resp.title, date1, date2, resp._id, resp))
+                        rows.push(createData(resp.title, date1, date2, resp._id,  resp))
                     }
                     setEvent(rows);
                 }catch (e) {
