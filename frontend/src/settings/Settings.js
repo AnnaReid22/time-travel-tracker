@@ -38,7 +38,6 @@ export default function IconLabelButtons({loggedIn, setLoggedIn}) {
 
   useEffect(() => {
     async function initializeImportanceMeter() {
-      console.log("i hate react")
       setImportanceMeter(await getImportanceMeter());
     }
     initializeImportanceMeter();
@@ -92,8 +91,6 @@ export default function IconLabelButtons({loggedIn, setLoggedIn}) {
       if (response.status === 201) {
         console.log("Account found");
         var user = response.data;
-        console.log(user)
-        console.log(user.importanceMeter)
         return user.importanceMeter
       }
       else {
@@ -102,7 +99,6 @@ export default function IconLabelButtons({loggedIn, setLoggedIn}) {
     }
     catch (error) {
       console.log(error.message)
-      console.log("hey")
       return false;
     }
   }
@@ -141,7 +137,6 @@ export default function IconLabelButtons({loggedIn, setLoggedIn}) {
     }
     catch (error) {
       console.log(error.message)
-      console.log("hey")
       return false;
     }
   };

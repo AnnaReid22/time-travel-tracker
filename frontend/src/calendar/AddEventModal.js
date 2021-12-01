@@ -43,7 +43,6 @@ export default function AddEventModal ({clicked, events, setEvents, setModal, us
 
     useEffect(() => {
         async function initializeImportanceMeter() {
-          console.log("i hate react")
           setImportanceMeter(await getImportanceMeter());
         }
         initializeImportanceMeter();
@@ -129,8 +128,6 @@ export default function AddEventModal ({clicked, events, setEvents, setModal, us
           if (response.status === 201) {
             console.log("Account found");
             var user = response.data;
-            console.log(user)
-            console.log(user.importanceMeter)
             return user.importanceMeter
           }
           else {
@@ -139,29 +136,9 @@ export default function AddEventModal ({clicked, events, setEvents, setModal, us
         }
         catch (error) {
           console.log(error.message)
-          console.log("hey")
           return false;
         }
       }
-
-    /*const importance = [
-        {
-          value: 1,
-          label: '!',
-        },
-        {
-          value: 3,
-          label: '!!',
-        },
-        {
-          value: 5,
-          label: '!!!',
-        },
-        {
-          value: 7,
-          label: '!!!!',
-        },
-      ];*/
 
       const categories = [
         {
