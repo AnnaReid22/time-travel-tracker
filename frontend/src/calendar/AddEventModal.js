@@ -12,6 +12,7 @@ import { FormGroup } from '@mui/material';
 import { FormControlLabel } from '@mui/material';
 import axios from 'axios';
 import moment from "moment";
+import { useEffect } from 'react';
 
 export default function AddEventModal ({clicked, events, setEvents, setModal, userID}) { 
     const [startDate, setStartDate] = React.useState(clicked.start);
@@ -21,6 +22,32 @@ export default function AddEventModal ({clicked, events, setEvents, setModal, us
     const [title, setTitle] = React.useState('');
     const [description, setDescription] = React.useState('');
     const [doNotPush, setDoNotPush] = React.useState(false);
+    const [importanceMeter, setImportanceMeter] = React.useState([
+        {
+          value: 1,
+          label: '!',
+        },
+        {
+          value: 3,
+          label: '!!',
+        },
+        {
+          value: 5000,
+          label: '!!!',
+        },
+        {
+          value: 7,
+          label: '!!!!',
+        },
+      ]);
+
+    useEffect(() => {
+        async function initializeImportanceMeter() {
+          console.log("i hate react")
+          setImportanceMeter(await getImportanceMeter());
+        }
+        initializeImportanceMeter();
+    }, []);
 
     function handleClose() {
         setModal(false)
@@ -96,7 +123,28 @@ export default function AddEventModal ({clicked, events, setEvents, setModal, us
         window.location.reload(false);
     }
 
-    const importance = [
+    async function getImportanceMeter() {
+        try {
+          const response = await axios.get('http://localhost:5000/user/'+ sessionStorage.getItem("userID").replaceAll("\"", ""));
+          if (response.status === 201) {
+            console.log("Account found");
+            var user = response.data;
+            console.log(user)
+            console.log(user.importanceMeter)
+            return user.importanceMeter
+          }
+          else {
+            console.log("Error, account not found.")
+          }
+        }
+        catch (error) {
+          console.log(error.message)
+          console.log("hey")
+          return false;
+        }
+      }
+
+    /*const importance = [
         {
           value: 1,
           label: '!',
@@ -113,7 +161,7 @@ export default function AddEventModal ({clicked, events, setEvents, setModal, us
           value: 7,
           label: '!!!!',
         },
-      ];
+      ];*/
 
       const categories = [
         {
@@ -162,7 +210,7 @@ export default function AddEventModal ({clicked, events, setEvents, setModal, us
                     onChange={handleChangeImportance}
                     helperText="Importance"
                     >
-                    {importance.map((option) => (
+                    {importanceMeter.map((option) => (
                         <MenuItem key={option.label} value={option.value}>
                         {option.label}
                         </MenuItem>
