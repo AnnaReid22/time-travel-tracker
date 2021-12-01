@@ -5,7 +5,7 @@ import Stack from "@mui/material/Stack";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Redirect } from "react-router";
-import { Dialog, DialogTitle, DialogContent, Modal } from "@mui/material";
+import { DialogTitle, DialogContent, Modal } from "@mui/material";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Close from "@mui/icons-material/Close";
 import Check from "@mui/icons-material/Check";
