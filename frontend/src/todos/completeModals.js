@@ -30,7 +30,7 @@ export function AddToCompleteModal (items) {
     const handleClose = () => setOpen(false);
     const handleRouteComplete = () =>{ 
         setCompleteToTrue()
-        var data = {'time':items["selectedItems"].end, 'title':items["selectedItems"].title}
+        var data = {'time':items["selectedItems"].givenEnd, 'title':items["selectedItems"].title}
         sessionStorage.setItem( 'objectToPass', JSON.stringify(data));
         history.push("/finish");
     }
