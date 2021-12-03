@@ -56,3 +56,16 @@ Last Updated: October 25th, 2021
 ![Use Case Diagram](./docs/Use_Case_Diagram.png)
 
 Last Updated: October 22nd, 2021
+
+# Coverage
+We also had full coverage of our MongoDB model, as seen in the screenshots below. These reports can be found in:
+`./backend/htmlcov`
+
+Full Coverage Report:
+
+![Report](./docs/report.png)
+
+
+Model MongoDB Coverage (Access the HTML Coverage Reports to See the Full Coverage):
+
+![Model_Coverage](./docs/model_coverage.png)
